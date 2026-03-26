@@ -360,16 +360,14 @@ export default function DirectBotLog() {
               <Square className="w-3.5 h-3.5" /> Stop
             </button>
           )}
-          {(status === 'stopped' || status === 'failed') && (
-            <button
-              data-testid="button-restart-bot"
-              onClick={handleRestart}
-              disabled={actionBusy}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500/30 text-emerald-400 text-xs font-mono hover:bg-emerald-500/10 transition-all disabled:opacity-50"
-            >
-              <RotateCcw className="w-3.5 h-3.5" /> Restart
-            </button>
-          )}
+          <button
+            data-testid="button-restart-bot"
+            onClick={handleRestart}
+            disabled={actionBusy}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500/30 text-emerald-400 text-xs font-mono hover:bg-emerald-500/10 transition-all disabled:opacity-50"
+          >
+            <RotateCcw className="w-3.5 h-3.5" /> Restart
+          </button>
           <button
             data-testid="button-delete-bot"
             onClick={handleDelete}
@@ -505,7 +503,7 @@ export default function DirectBotLog() {
         </div>
 
         {/* Interactive console input */}
-        <div className="border-t border-emerald-500/15 bg-black/40 px-3 py-2 flex items-center gap-2">
+        <div className="border-t border-emerald-500/15 bg-black/40 px-3 py-2 flex items-center gap-2" title="stdin: sends keypresses to the running bot process | shell: runs a command in the bot directory">
           {/* Mode toggle */}
           <button
             onClick={() => setShellMode(v => !v)}

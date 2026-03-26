@@ -1,6 +1,14 @@
 {
   "1": [
     {
+      "id": "1774542498012-r1s8fo",
+      "type": "server",
+      "title": "Bot Deploying",
+      "message": "Your \"CASPER XD\" bot is starting up!",
+      "read": false,
+      "createdAt": "2026-03-26T16:28:18.012Z"
+    },
+    {
       "id": "1774542015457-r1t55y",
       "type": "server",
       "title": "Bot Deploying",
