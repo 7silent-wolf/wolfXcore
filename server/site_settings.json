@@ -5,5 +5,9 @@
   "supportPhone": "https://wa.me/254713046497",
   "supportPhoneDisplay": "+254 713 046 497",
   "siteName": "wolfXnode",
-  "siteTagline": "I am just an explorer"
+  "siteTagline": "I am just an explorer",
+  "theme": "neon-green",
+  "themeVars": {
+    "background": "0 81% 49%"
+  }
 }

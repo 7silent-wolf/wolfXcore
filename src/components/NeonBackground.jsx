@@ -148,17 +148,17 @@ const NeonBackground = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-black">
-      {/* Solid black background */}
-      <div className="absolute inset-0 bg-black" />
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-background">
+      {/* Background base */}
+      <div className="absolute inset-0 bg-background" />
       
       {/* Grid pattern - exactly like the image */}
       <div 
         className="absolute inset-0"
         style={{
           backgroundImage: `
-            linear-gradient(to right, hsl(120 100% 50% / 0.08) 1px, transparent 1px),
-            linear-gradient(to bottom, hsl(120 100% 50% / 0.08) 1px, transparent 1px)
+            linear-gradient(to right, hsl(var(--primary) / 0.08) 1px, transparent 1px),
+            linear-gradient(to bottom, hsl(var(--primary) / 0.08) 1px, transparent 1px)
           `,
           backgroundSize: '80px 80px',
         }}
@@ -169,7 +169,7 @@ const NeonBackground = () => {
         className="absolute inset-0 opacity-5"
         style={{
           backgroundImage: `
-            repeating-linear-gradient(45deg, transparent, transparent 10px, hsl(120 100% 50% / 0.05) 10px, hsl(120 100% 50% / 0.05) 20px)
+            repeating-linear-gradient(45deg, transparent, transparent 10px, hsl(var(--primary) / 0.05) 10px, hsl(var(--primary) / 0.05) 20px)
           `,
         }}
       />
@@ -184,10 +184,10 @@ const NeonBackground = () => {
             top: `${node.y}%`,
             width: node.size,
             height: node.size,
-            background: 'hsl(120 100% 50%)',
+            background: 'hsl(var(--primary))',
             boxShadow: `
-              0 0 ${node.size * 1.5}px hsl(120 100% 50% / ${node.opacity}),
-              0 0 ${node.size * 3}px hsl(120 100% 50% / ${node.opacity * 0.5})
+              0 0 ${node.size * 1.5}px hsl(var(--primary) / ${node.opacity}),
+              0 0 ${node.size * 3}px hsl(var(--primary) / ${node.opacity * 0.5})
             `,
             filter: 'blur(0.5px)',
           }}
@@ -224,13 +224,13 @@ const NeonBackground = () => {
       <div 
         className="absolute top-0 left-0 w-64 h-64 opacity-10"
         style={{
-          background: 'radial-gradient(circle at top left, hsl(120 100% 50% / 0.2) 0%, transparent 70%)',
+          background: 'radial-gradient(circle at top left, hsl(var(--primary) / 0.2) 0%, transparent 70%)',
         }}
       />
       <div 
         className="absolute bottom-0 right-0 w-64 h-64 opacity-10"
         style={{
-          background: 'radial-gradient(circle at bottom right, hsl(120 100% 50% / 0.2) 0%, transparent 70%)',
+          background: 'radial-gradient(circle at bottom right, hsl(var(--primary) / 0.2) 0%, transparent 70%)',
         }}
       />
 
@@ -241,7 +241,7 @@ const NeonBackground = () => {
           className="absolute top-0 w-[1px] h-full"
           style={{
             left: `${position}%`,
-            background: 'linear-gradient(to bottom, transparent, hsl(120 100% 50% / 0.05), transparent)',
+            background: 'linear-gradient(to bottom, transparent, hsl(var(--primary) / 0.05), transparent)',
           }}
           animate={{
             opacity: [0.05, 0.15, 0.05],
