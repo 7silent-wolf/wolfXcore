@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { Terminal, Square, Trash2, RotateCcw, ArrowLeft, ChevronDown } from 'lucide-react';
+import { Terminal, Square, Trash2, RotateCcw, ArrowLeft, ChevronDown, Send, TerminalSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -155,8 +155,12 @@ export default function DirectBotLog() {
   const [totalLines, setTotalLines] = useState(0);
   const [limit, setLimit]         = useState(200);
   const [showLimitMenu, setShowLimitMenu] = useState(false);
+  const [inputVal, setInputVal]   = useState('');
+  const [shellMode, setShellMode] = useState(false);
+  const [sending, setSending]     = useState(false);
 
   const logEndRef  = useRef(null);
+  const inputRef   = useRef(null);
   const logBoxRef  = useRef(null);
   const startTime  = useRef(Date.now());
   const pollRef    = useRef(null);
@@ -287,6 +291,25 @@ export default function DirectBotLog() {
   const handleDelete = () => {
     if (!window.confirm(`Delete "${serverName || botName}" permanently?`)) return;
     doAction('', 'DELETE', 'Deployment deleted', () => navigate('/my-bots'));
+  };
+
+  const sendInput = async () => {
+    const val = inputVal.trim();
+    if (!val || sending) return;
+    setSending(true);
+    const endpoint = shellMode ? 'exec' : 'stdin';
+    const body     = shellMode ? { cmd: val } : { input: val };
+    try {
+      const res  = await fetch(`/api/bots/direct/${id}/${endpoint}`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!data.success) toast.error(data.message || 'Send failed');
+      else setInputVal('');
+    } catch { toast.error('Send failed'); }
+    finally { setSending(false); inputRef.current?.focus(); }
   };
 
   const fmtTime = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
@@ -426,7 +449,7 @@ export default function DirectBotLog() {
         <div
           ref={logBoxRef}
           onScroll={handleScroll}
-          className="h-[500px] overflow-y-auto p-4 font-mono space-y-0.5 text-gray-200"
+          className="h-[440px] overflow-y-auto p-4 font-mono space-y-0.5 text-gray-200"
           style={{ scrollBehavior: 'smooth' }}
           data-testid="log-terminal"
         >
@@ -479,6 +502,54 @@ export default function DirectBotLog() {
           )}
 
           <div ref={logEndRef} />
+        </div>
+
+        {/* Interactive console input */}
+        <div className="border-t border-emerald-500/15 bg-black/40 px-3 py-2 flex items-center gap-2">
+          {/* Mode toggle */}
+          <button
+            onClick={() => setShellMode(v => !v)}
+            title={shellMode ? 'Shell mode — runs commands in bot directory' : 'Stdin mode — sends input to running bot'}
+            className={`flex-shrink-0 flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded border transition-all ${
+              shellMode
+                ? 'border-yellow-500/50 text-yellow-400 bg-yellow-500/10'
+                : 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10'
+            }`}
+            data-testid="button-console-mode"
+          >
+            {shellMode ? <TerminalSquare className="w-3 h-3" /> : <Send className="w-3 h-3" />}
+            {shellMode ? 'shell' : 'stdin'}
+          </button>
+
+          {/* Prompt prefix */}
+          <span className="text-[11px] font-mono text-emerald-500 flex-shrink-0 select-none">
+            {shellMode ? '$' : '>'}
+          </span>
+
+          {/* Input */}
+          <input
+            ref={inputRef}
+            type="text"
+            value={inputVal}
+            onChange={e => setInputVal(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') sendInput(); }}
+            placeholder={shellMode ? 'ls, npm start, cat .env …' : 'type input for bot (e.g. 1, phone number…)'}
+            className="flex-1 bg-transparent text-[11px] font-mono text-gray-200 placeholder:text-gray-700 outline-none min-w-0"
+            data-testid="input-console"
+            autoComplete="off"
+            spellCheck={false}
+          />
+
+          {/* Send button */}
+          <button
+            onClick={sendInput}
+            disabled={sending || !inputVal.trim()}
+            className="flex-shrink-0 flex items-center gap-1 text-[10px] font-mono px-2.5 py-1 rounded border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/15 transition-all disabled:opacity-30"
+            data-testid="button-send-input"
+          >
+            <Send className="w-3 h-3" />
+            {sending ? '…' : 'Send'}
+          </button>
         </div>
       </div>
 

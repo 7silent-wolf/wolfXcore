@@ -4586,6 +4586,63 @@ app.delete('/api/bots/direct/:id', authenticateToken, async (req, res) => {
   return res.json({ success: true });
 });
 
+// POST /api/bots/direct/:id/stdin — write input into the bot's stdin queue
+app.post('/api/bots/direct/:id/stdin', authenticateToken, (req, res) => {
+  const userId = req.user.userId.toString();
+  const all = loadDirectDeployments();
+  const dep = all.find(d => d.id === req.params.id && (d.userId === userId || req.user.isAdmin));
+  if (!dep) return res.status(404).json({ success: false, message: 'Deployment not found' });
+
+  const { input } = req.body;
+  if (typeof input !== 'string' || !input.length) return res.status(400).json({ success: false, message: 'input required' });
+
+  const deployDir = path.join(BOTS_BASE_DIR, dep.id);
+  const stdinQueue = path.join(deployDir, '.wolfxnode_stdin');
+  try {
+    fs.appendFileSync(stdinQueue, input + '\n');
+    appendBotLog(dep.id, 'info', `\x1b[2m[you] ${input}\x1b[0m`);
+    return res.json({ success: true });
+  } catch (e) {
+    return res.status(500).json({ success: false, message: e.message });
+  }
+});
+
+// POST /api/bots/direct/:id/exec — run a shell command in the bot's deploy directory
+app.post('/api/bots/direct/:id/exec', authenticateToken, (req, res) => {
+  const userId = req.user.userId.toString();
+  const all = loadDirectDeployments();
+  const dep = all.find(d => d.id === req.params.id && (d.userId === userId || req.user.isAdmin));
+  if (!dep) return res.status(404).json({ success: false, message: 'Deployment not found' });
+
+  const { cmd } = req.body;
+  if (!cmd || typeof cmd !== 'string') return res.status(400).json({ success: false, message: 'cmd required' });
+
+  // Disallow dangerous commands
+  const BLOCKED = /^\s*(rm\s+-rf|sudo|shutdown|reboot|mkfs|dd\s+if)/i;
+  if (BLOCKED.test(cmd)) return res.status(403).json({ success: false, message: 'Command not allowed' });
+
+  const deployDir = path.join(BOTS_BASE_DIR, dep.id);
+  appendBotLog(dep.id, 'info', `\x1b[33m$ ${cmd}\x1b[0m`);
+
+  const child = spawn('sh', ['-c', cmd], {
+    cwd: fs.existsSync(deployDir) ? deployDir : process.cwd(),
+    stdio: ['ignore', 'pipe', 'pipe'],
+    env: { ...process.env, FORCE_COLOR: '1' },
+  });
+
+  let outBuf = '', errBuf = '';
+  child.stdout.on('data', d => { outBuf += d.toString(); });
+  child.stderr.on('data', d => { errBuf += d.toString(); });
+  child.on('close', code => {
+    (outBuf + errBuf).split('\n').forEach(line => {
+      if (line.trim()) appendBotLog(dep.id, code === 0 ? 'info' : 'warn', line);
+    });
+    appendBotLog(dep.id, code === 0 ? 'success' : 'error', `[shell] exited ${code}`);
+  });
+
+  return res.json({ success: true });
+});
+
 // ============================================================
 // END DIRECT BOT RUNNER
 // ============================================================

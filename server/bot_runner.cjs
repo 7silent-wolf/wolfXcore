@@ -34,8 +34,20 @@ const SUPPRESS_RE = /MODULE_TYPELESS_PACKAGE_JSON|Reparsing as ES module because
 const bot = spawn(process.execPath, ['--no-warnings', ENTRY], {
   cwd: BOT_DIR,
   env: { ...process.env, NODE_NO_WARNINGS: '1' },
-  stdio: ['ignore', 'pipe', 'pipe'],
+  stdio: ['pipe', 'pipe', 'pipe'],
 });
+
+// Poll .wolfxnode_stdin for commands typed in the web console
+const STDIN_QUEUE = path.join(BOT_DIR, '.wolfxnode_stdin');
+const stdinPoller = setInterval(() => {
+  try {
+    if (!fs.existsSync(STDIN_QUEUE)) return;
+    const content = fs.readFileSync(STDIN_QUEUE, 'utf8');
+    if (!content) return;
+    fs.writeFileSync(STDIN_QUEUE, ''); // drain immediately
+    if (bot.stdin && !bot.stdin.destroyed) bot.stdin.write(content);
+  } catch (_) {}
+}, 300);
 
 // Buffer incomplete lines until a newline arrives
 let stdoutBuf = '';
@@ -56,6 +68,7 @@ bot.stderr.on('data', chunk => {
 });
 
 bot.on('close', code => {
+  clearInterval(stdinPoller);
   // Flush any remaining buffered output that didn't end with \n
   if (stdoutBuf && !SUPPRESS_RE.test(stdoutBuf)) writeLine('info', stdoutBuf);
   if (stderrBuf && !SUPPRESS_RE.test(stderrBuf)) writeLine('warn', stderrBuf);
