@@ -1,0 +1,343 @@
+================================================================================
+  wolfXnode — Platform Documentation
+  Status: IN DEVELOPMENT (update this file as features are completed)
+  Last updated: 2026-03-26
+  Purpose: Internal reference for developers/agents continuing this project.
+           Update each section as features are built, changed, or removed.
+================================================================================
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 1 — WHAT IS wolfXnode?
+────────────────────────────────────────────────────────────────────────────────
+
+wolfXnode is a Heroku-like hosting platform specifically designed for WhatsApp
+bots. Users deploy bots directly from GitHub repositories. The platform handles
+cloning, dependency installation, environment variable injection, process
+management, and real-time log streaming — all from a browser.
+
+Target environment: A VPS (Virtual Private Server) capable of running many
+simultaneous WhatsApp bot processes.
+
+Key differentiators:
+  - One-click deploy from GitHub URL
+  - app.json support for env var templates (like Heroku)
+  - Real-time ANSI-colored log streaming in the browser
+  - Persistent bot processes that survive server restarts
+  - Interactive web console (stdin + shell command execution)
+  - Per-bot port assignment (deterministic, based on deploy ID)
+  - Admin and SuperAdmin tiers for platform management
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 2 — TECH STACK
+────────────────────────────────────────────────────────────────────────────────
+
+  Frontend   : React + Vite + TailwindCSS + shadcn/ui
+  Backend    : Node.js + Express (single server/index.js)
+  Bot Runner : server/bot_runner.cjs (spawned as detached child process)
+  Database   : File-based JSON (no external DB — all data in server/*.json)
+  Auth       : JWT (jsonwebtoken)
+  Styling    : Custom neon/dark theme with CSS variable theming
+  Animations : Framer Motion (NeonBackground.jsx)
+  Icons      : lucide-react, react-icons/si
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 3 — PROJECT STRUCTURE (key files)
+────────────────────────────────────────────────────────────────────────────────
+
+  server/
+    index.js                  — Main Express server. All API routes live here.
+    bot_runner.cjs            — Detached process that runs a bot and streams logs.
+    bot_deployments.json      — Pterodactyl-style (panel) bot deployments.
+    direct_deployments.json   — Direct process deployments (main system).
+    bot_catalog.json          — List of available bots (name, repo, price).
+    site_settings.json        — Site-wide settings (theme, social links, name).
+    superadmin_config.json    — SuperAdmin username and access key (wolf / key).
+    bot_logs/                 — JSONL log files, one per deployment (gitignored).
+    security.log              — Security event log.
+
+  src/
+    pages/
+      DirectBotLog.jsx        — Bot console page (logs + interactive input bar).
+      MyBots.jsx              — User's bot dashboard.
+      SuperAdmin.jsx          — SuperAdmin panel (theme, catalog, users).
+      Login.jsx / Register.jsx
+      Landing.jsx
+      WolfChat.jsx
+      Referrals.jsx
+      Servers.jsx
+      Tutorials.jsx
+    components/
+      NeonBackground.jsx      — Full-page animated background (grid, glows).
+    context/
+      ThemeContext.jsx        — Fetches site_settings and applies CSS vars.
+
+  wolfXnodedocs.txt           — THIS FILE. Keep it updated.
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 4 — BOT DEPLOYMENT FLOW
+────────────────────────────────────────────────────────────────────────────────
+
+1. User clicks "Deploy" and provides a GitHub repo URL.
+2. Server reads app.json from the repo (if it exists) to get env var templates.
+3. User fills in required env vars in the deploy form.
+4. Server runs:
+     a. git clone --depth=1 <repo> <deployDir>
+     b. npm install --legacy-peer-deps
+     c. Writes a .env file in deployDir with the user's vars
+     d. Spawns bot_runner.cjs as a DETACHED process (survives server restarts)
+5. bot_runner.cjs starts the bot with: node --no-warnings <entryFile>
+6. Bot output (stdout + stderr) is captured line-by-line and written to a .jsonl
+   log file. The browser polls this file every 2 seconds.
+
+Bot deploy directory: $BOTS_BASE_DIR/<deployId>/
+  Default on dev : /tmp/wolfxnode-bots/<deployId>/
+  Set on VPS     : export BOTS_BASE_DIR=/var/wolfhost-bots
+
+Port assignment (deterministic, no conflicts):
+  port = 10000 + (parseInt(deployId.replace(/-/g,'').slice(0,6), 16) % 50000)
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 5 — ENV VARS AND THE .ENV FILE
+────────────────────────────────────────────────────────────────────────────────
+
+When a bot is deployed, wolfXnode writes a .env file inside the bot's directory
+before starting the process. The bot reads this file on startup (typically via
+dotenv or a similar library).
+
+CASE A — All vars provided:
+  The .env file contains all required values. The bot reads them on startup,
+  finds everything it needs, and runs immediately without asking for anything.
+  No user interaction is required after deployment.
+
+CASE B — Missing or empty vars:
+  The bot starts, fails to find its required configuration, and falls into its
+  own interactive setup wizard. Example — CASPER-XD ULTRA outputs:
+
+    ┌────────────────────────────────────┐
+    │   CASPER-XD ULTRA - Setup          │
+    │  ⚠ No valid session found!        │
+    │  Please choose how to proceed:     │
+    │  1. Pairing Code (enter phone)     │
+    │  2. Paste Session String           │
+    │  3. Exit                           │
+    └────────────────────────────────────┘
+
+  The bot is now WAITING on stdin. It will sit there indefinitely until a user
+  provides input. This is where the interactive console is needed.
+
+KNOWN UX GAP (to be addressed):
+  Currently the user must notice the bot is stuck by watching the log themselves.
+  Planned improvement: detect stdin-waiting patterns in log output (keywords like
+  "choose", "enter", "input required", "proceed") and show a highlighted alert
+  on the bot card and log page: "Your bot needs setup — open the console."
+  [STATUS: PLANNED — not yet implemented as of 2026-03-26]
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 6 — INTERACTIVE CONSOLE (stdin + shell)
+────────────────────────────────────────────────────────────────────────────────
+
+Every bot log page has an interactive input bar at the bottom of the terminal.
+
+HOW IT WORKS — stdin mode (green, default):
+  - User types input and presses Enter or clicks Send.
+  - Browser calls: POST /api/bots/direct/:id/stdin  { input: "1" }
+  - Server appends "1\n" to <deployDir>/.wolfxnode_stdin
+  - bot_runner.cjs polls that file every 300ms
+  - When content is found, it is written to the bot process's stdin pipe
+  - The bot receives the input as if the user typed it in a terminal
+  - bot_runner.cjs clears the file immediately after reading
+
+HOW IT WORKS — shell mode (yellow, toggle):
+  - User types a shell command (e.g. ls, npm install, cat .env)
+  - Browser calls: POST /api/bots/direct/:id/exec  { cmd: "ls -la" }
+  - Server spawns: sh -c "<cmd>" in the bot's deploy directory
+  - Output is streamed back into the bot's log file
+  - Appears in the browser log terminal within 2 seconds
+  - Blocked commands: rm -rf, sudo, shutdown, reboot, mkfs, dd if
+
+IMPORTANT — STDIN REQUIRES A FRESH RUNNER:
+  If a bot was running BEFORE the stdin feature was deployed (added 2026-03-26),
+  its runner process still has stdin closed (old code). The browser console will
+  show [you] entries but the bot will not respond.
+  Fix: Click the RESTART button on the bot log page. This kills the old runner
+  and spawns a new one with stdin piped. The Restart button is always visible
+  regardless of bot status (running, stopped, failed).
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 7 — LOG SYSTEM
+────────────────────────────────────────────────────────────────────────────────
+
+Logs are stored as JSONL files (one JSON object per line):
+  Format: { "ts": "ISO-8601", "level": "info|warn|error|success", "msg": "..." }
+  Location: server/bot_logs/<deployId>.jsonl  (gitignored)
+
+Log levels and colours in the browser:
+  info    → wolfXnode label (teal/emerald)
+  warn    → WARN label (yellow)
+  error   → ERR label (red)
+  success → OK label (bright green)
+
+ANSI colour codes in log messages are parsed and rendered as coloured spans.
+Box-drawing characters (─ ┌ │ etc.) render correctly in the terminal UI.
+
+Line buffering fix (added 2026-03-26):
+  Node.js data events fire per-chunk, not per-line. bot_runner.cjs now buffers
+  incomplete lines and only writes a log entry when a full \n-terminated line
+  is available. This prevents split lines (each word appearing as its own entry).
+
+Log polling: browser fetches /api/bots/direct/:id/logs?since=<lineIndex> every
+  2 seconds. Only new lines are fetched on each poll (incremental).
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 8 — PROCESS PERSISTENCE (surviving server restarts)
+────────────────────────────────────────────────────────────────────────────────
+
+bot_runner.cjs is spawned as a DETACHED process:
+  spawn(..., { detached: true, stdio: 'ignore' })
+  runner.unref()
+
+This means the runner process keeps running even if the wolfXnode server (Node)
+restarts or crashes. The bot stays alive.
+
+On server startup, direct_deployments.json is read. For each recorded deployment:
+  - If the saved runnerPid is still alive → reconnect (no restart needed)
+  - If the pid is dead → restart the bot automatically
+
+KNOWN ISSUE: Reconnected runners use whatever code was running at the time they
+  were first spawned. If bot_runner.cjs is updated, existing runners won't pick
+  up the change until they are restarted via the Restart button.
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 9 — USER ROLES
+────────────────────────────────────────────────────────────────────────────────
+
+  Regular user  — can deploy bots, view their own logs, manage their bots
+  Admin         — bypasses bot deployment cost (KES 50 balance check)
+  SuperAdmin    — access to SuperAdmin panel (theme editor, catalog editor,
+                  user management). Only visible to the configured username.
+
+SuperAdmin config: server/superadmin_config.json
+  { "username": "wolf", "key": "Silentwolf906." }
+Setup on fresh VPS: node server/setup_superadmin.cjs
+
+Default admin user: wolf (id:1, isAdmin: true, isSuperAdmin: true)
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 10 — THEMING SYSTEM
+────────────────────────────────────────────────────────────────────────────────
+
+The site theme is controlled via CSS variables set on :root.
+ThemeContext.jsx fetches /api/site-settings on mount and calls applyThemeVars(),
+which sets variables like --background, --primary, etc. on document.documentElement.
+
+Theme is saved in server/site_settings.json → "themeVars": { "background": "H S% L%" }
+Use HSL format WITHOUT hsl() wrapper: e.g. "120 100% 10%"
+
+To reset to default green theme: set "themeVars": {} in site_settings.json
+
+NeonBackground.jsx:
+  - Uses bg-background (not hardcoded bg-black) so full page responds to theme
+  - Grid dots, lines, corner glows all use hsl(var(--primary))
+  - All hardcoded hsl(120 100% 50%) values replaced with hsl(var(--primary))
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 11 — RATE LIMITING
+────────────────────────────────────────────────────────────────────────────────
+
+All rate limiters are currently DISABLED (replaced with noopMiddleware).
+Server logs: "rate-limiting=OFF" on startup.
+
+To re-enable: replace noopMiddleware with actual express-rate-limit instances
+in server/index.js. There are 7 limiter slots (authLimiter, adminLimiter, etc.)
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 12 — BOT CATALOG
+────────────────────────────────────────────────────────────────────────────────
+
+File: server/bot_catalog.json
+Each entry: { "id", "name", "repo", "description", "priceKES", "mainFile" }
+
+Deployment cost: KES 50 per bot (deducted from user balance).
+Admins bypass the balance check entirely.
+
+app.json support: when a user deploys from a GitHub URL, wolfXnode fetches
+app.json from the repo root (tries main branch, then master). env var names and
+descriptions from app.json are used to pre-populate the deploy form.
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 13 — ENVIRONMENT VARIABLES (server)
+────────────────────────────────────────────────────────────────────────────────
+
+  JWT_SECRET          — Secret for signing JWT tokens (required in production)
+  BOTS_BASE_DIR       — Where bot directories are stored
+                        Default: /tmp/wolfxnode-bots
+                        Production: /var/wolfhost-bots (or similar persistent path)
+  WOLFXNODE_LOG_FILE  — Passed to each bot_runner.cjs process; path to its .jsonl
+  PAYSTACK_SECRET_KEY — Payment processing (optional; features disabled if unset)
+  PTERODACTYL_API_KEY — Panel server management (optional; disabled if unset)
+  PORT                — Server port (default 5000)
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 14 — VPS DEPLOYMENT CHECKLIST
+────────────────────────────────────────────────────────────────────────────────
+
+  [ ] Clone repo to VPS
+  [ ] npm install
+  [ ] Set environment variables (JWT_SECRET, BOTS_BASE_DIR, etc.)
+  [ ] node server/setup_superadmin.cjs  ← sets up wolf/key credentials
+  [ ] npm run build  (or let the start script do it)
+  [ ] Use PM2 or systemd to keep the server running:
+        pm2 start server/index.js --name wolfxnode
+  [ ] Set BOTS_BASE_DIR to a persistent directory (not /tmp — it clears on reboot)
+  [ ] Open port 5000 (or your chosen PORT) in firewall
+  [ ] Set up a reverse proxy (nginx/caddy) for HTTPS if needed
+
+
+────────────────────────────────────────────────────────────────────────────────
+SECTION 15 — KNOWN ISSUES & PLANNED IMPROVEMENTS
+────────────────────────────────────────────────────────────────────────────────
+
+  [OPEN]   stdin "needs input" detection — detect when a bot is waiting for
+           keyboard input and surface a banner/alert on the bot card and log page.
+
+  [OPEN]   BOTS_BASE_DIR in /tmp — on server restart bots restart but bot
+           directories survive in /tmp unless the OS clears /tmp. In production
+           BOTS_BASE_DIR must point to a persistent directory.
+
+  [OPEN]   Rate limiting disabled — all 7 limiters are noops. Re-enable before
+           going public to protect against brute-force and abuse.
+
+  [OPEN]   No database — all data is flat JSON files. Consider migrating to
+           SQLite or PostgreSQL when user count grows.
+
+  [OPEN]   Payment integration — Paystack key not set; balance top-up flow exists
+           in the UI but transactions are not processed.
+
+  [DONE]   Log line splitting — fixed 2026-03-26 (line buffering in bot_runner)
+  [DONE]   Interactive console — stdin + shell exec, added 2026-03-26
+  [DONE]   Full site rename WolfHost → wolfXnode — completed 2026-03-26
+  [DONE]   Theme system — CSS vars applied globally, NeonBackground fixed
+  [DONE]   Bot process persistence — survives server restarts via detached runner
+  [DONE]   ANSI colour rendering — full SGR parser in DirectBotLog.jsx
+  [DONE]   Incremental log polling — only new lines fetched per poll cycle
+
+
+────────────────────────────────────────────────────────────────────────────────
+  END OF FILE — Update this document as the platform evolves.
+  Next agent: add new sections or update existing ones. Do not remove [DONE]
+  entries — they serve as a changelog of what has been built.
+================================================================================

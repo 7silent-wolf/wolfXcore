@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "pj0OExHnAbVWSVxRgzmeT"
+uri = "file://wolfXnodedocs.txt"
+type = "text"
+title = "wolfXnode Platform Documentation"

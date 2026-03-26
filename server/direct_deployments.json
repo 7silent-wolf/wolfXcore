@@ -58,26 +58,5 @@
     "deployedAt": "2026-03-26T16:20:15.457Z",
     "updatedAt": "2026-03-26T16:31:18.259Z",
     "runnerPid": 3752
-  },
-  {
-    "id": "b11db502-9f8e-4e5a-a726-f1e8d372dd36",
-    "type": "direct",
-    "userId": "1",
-    "userEmail": "britonkiplangat@0gmail.com",
-    "botId": "aba3a7c4-60c3-42c2-a285-02475b406d76",
-    "botName": "CASPER XD",
-    "serverName": "casper-xd",
-    "repoUrl": "https://github.com/Casper-Tech-ke/CASPER-XD-ULTRA.git",
-    "mainFile": "index.js",
-    "envVars": {
-      "SESSION": "CASPER-XD-ULTRA;H4sIAAAAAAAAA5VU25KiSBD9l3rVGLkpSkRHbHFpERtRBEU35qGE4tJcu6pQccJ/n8CenpmH3dlenoqsjMyT55ysb6CqM4qXuAPKN9CQ7IwY7o+sazBQgNrGMSZgCCLEEFCAs+Q3h1t7DvLzelq7OtnJyVs+0OLYHuc389Sa44VViMZAXDyB+xA07anIwj8UdCf2s++qG9p07mVGyFGOedEZebcIC6J5G4x2Preqp698Ej6Be18RZSSrEqNJcYkJKpa4W6OMfA5+aCLPeIHBeBJcZacmeJ9WXsqtTG81GG/Gyc0gjaOerQsXfg5+66eGtbRGweyZzQsL0kJDr9tJOLfNC3p9yQ0xH2uIpjTh3uHTLKlwtIhwxTLWfZr3RHV5LS2nkcjpxNrMQp+TU7UurPhkpjrat61/OGVIHQf554BL+12q2uqkI6PjHMpb9XDdqbM8E2fNcZsmxprTHWHLBr57+B34mnx4Jf8/vO+1sW4MoLlI2pXmesFC39zy1Wi0swfq9LLWjDKcWsVNMwz6Ofim74llQjaBf7jRVhiMT2+23+mbZ68VmHU9DXJWC1sjmhubX/ARa8kf3eHqYXDeL80D3GfL016HLvQh2qWj6ugW3GK2mXOTWGwkJ+imh8K5OImk3WoxsiVvWizZ4VwebN8Ig6ba7kxv3hWuADdPj4ly3C0ioPD3ISA4ySgjiGV11ccEfjwEKDpvcUgwe9ALDJ2LbWFt836epku7ne6clWo/e7jldAjPAucPaJly+hXWT2AIGlKHmFIcmRllNelsTClKMAXK31+HoMJX9i5c304UhiDOCGV+1TZFjaIPVT8uURjWbcW2XRVq/QEToHC/wpixrEpoz2NbIRKm2RlrKWIUKDEqKP45ISY4AgojLf65tVod9cR7++VxtVhCMATlQ5AsAgoQxpLMi5w0kWaywo//ol8ufVnUNF8qzMAQFI80WRKliSTzvCiLMtcn9vH7T4B9vQgzlBUUKEBbi5Ychprx0klFKM3nME+glvStPwb6cMY78xE66Id0tEFWyXfHqEEXxDcuglI0vyaNUzA/mgfeerbq7Kd/KNLb6KJL2mabiSeBR/GJHwnLG6XLqXBUjXkTHK2zt0aas4Ln+dSqpLhIF0kz0yantESO+mrwU1ilZ7b1ZpxZIfuUv1wT7fLUd4vwOQvx782OxA4mHaSnbSc6O2/1dnnrMs3ubgFxrxKD7XO8sZIr23f7K5zo4WSl8eGBPB9KydYuuBJgs+R8zuJSy1S78rh7FacqfPfsY2eKH29V9nBTL1X/G2f4sfoV6gX8b+negfcO4+7D32r8eEz+ZSHVYF9CYRFz8+zIwjJAezpnyN8njunSw9JrTjvTLbjbyAtfwf3+dQiaArG4JiVQAKoiUmcRGAJSt71lF1Vc/6GZBhcLfZNs+8kLRBn8tQZeVmLKUNkAhZdlaSzx05n0nrUmdWMimgIFiGXBv257T3ewabYMsY+tArD/9CsH7t8BQs+pk3EHAAA=",
-      "PACK_NAME": "wolf",
-      "STICKER_AUTHOR": "Silentwolf906."
-    },
-    "priceKES": 50,
-    "status": "running",
-    "deployedAt": "2026-03-26T16:28:18.012Z",
-    "updatedAt": "2026-03-26T16:31:24.260Z",
-    "runnerPid": 3917
   }
 ]
