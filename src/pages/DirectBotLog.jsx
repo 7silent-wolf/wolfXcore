@@ -110,7 +110,7 @@ function AnsiSpan({ text }) {
 }
 
 const LEVEL_META = {
-  info:    { label: 'WOLFTECH', cls: 'text-emerald-400' },
+  info:    { label: 'wolfXnode', cls: 'text-emerald-400' },
   warn:    { label: 'WARN    ', cls: 'text-yellow-400'  },
   error:   { label: 'ERR     ', cls: 'text-red-400'     },
   success: { label: 'OK      ', cls: 'text-emerald-300' },
