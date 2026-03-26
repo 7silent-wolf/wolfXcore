@@ -1,20 +1,20 @@
 'use strict';
 /**
- * WolfHost Bot Runner
+ * wolfXnode Bot Runner
  * Spawned as a detached process. Runs the bot, captures all output
  * and writes structured JSONL lines to the log file.
- * Survives WolfHost server restarts (detached + stdio ignored by parent).
+ * Survives wolfXnode server restarts (detached + stdio ignored by parent).
  */
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const LOG_FILE  = process.env.WOLFHOST_LOG_FILE;
+const LOG_FILE  = process.env.WOLFXNODE_LOG_FILE;
 const ENTRY     = process.argv[2];
 const BOT_DIR   = process.argv[3] || process.cwd();
 
 if (!LOG_FILE || !ENTRY) {
-  process.stderr.write('[bot_runner] Missing WOLFHOST_LOG_FILE or entry file\n');
+  process.stderr.write('[bot_runner] Missing WOLFXNODE_LOG_FILE or entry file\n');
   process.exit(1);
 }
 

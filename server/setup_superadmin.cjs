@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * WolfHost Superadmin Setup Script
+ * wolfXnode Superadmin Setup Script
  * Run this once on VPS to configure the superadmin account and key.
  * Usage: node server/setup_superadmin.cjs
  */
@@ -30,7 +30,7 @@ function loadExisting() {
 
 async function main() {
   console.log('\n╔══════════════════════════════════════╗');
-  console.log('║   WolfHost  —  Superadmin Setup       ║');
+  console.log('║   wolfXnode  —  Superadmin Setup      ║');
   console.log('╚══════════════════════════════════════╝\n');
 
   const existing = loadExisting();

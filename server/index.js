@@ -2558,9 +2558,9 @@ app.post('/api/admin/upload-server', adminLimiter, authenticateToken, requireAdm
       allocation: {
         default: allocationId,
       },
-      description: `WolfHost ${plan} Plan - Uploaded by Admin`,
+      description: `wolfXnode ${plan} Plan - Uploaded by Admin`,
       start_on_completion: false,
-      external_id: `wolfhost-admin-${targetUserId}-${Date.now()}`,
+      external_id: `wolfxnode-admin-${targetUserId}-${Date.now()}`,
     };
 
     const pteroResponse = await pteroFetch('/servers', {
@@ -2717,9 +2717,9 @@ app.post('/api/servers/create', authenticateToken, [
       allocation: {
         default: allocationId,
       },
-      description: `WolfHost ${plan} Plan - Created via WolfHost Panel`,
+      description: `wolfXnode ${plan} Plan - Created via wolfXnode Panel`,
       start_on_completion: false,
-      external_id: `wolfhost-${userId}-${Date.now()}`,
+      external_id: `wolfxnode-${userId}-${Date.now()}`,
     };
 
     let pteroResponse;
@@ -3102,9 +3102,9 @@ app.post('/api/tasks/claim-server', authenticateToken, async (req, res) => {
         backups: FREE_SERVER_LIMITS.backups,
       },
       allocation: { default: allocationId },
-      description: `WolfHost Free Trial - Expires ${new Date(Date.now() + FREE_SERVER_LIFETIME_MS).toLocaleDateString()}`,
+      description: `wolfXnode Free Trial - Expires ${new Date(Date.now() + FREE_SERVER_LIFETIME_MS).toLocaleDateString()}`,
       start_on_completion: false,
-      external_id: `wolfhost-free-${userId}-${Date.now()}`,
+      external_id: `wolfxnode-free-${userId}-${Date.now()}`,
     };
 
     let pteroResponse;
@@ -3238,9 +3238,9 @@ app.post('/api/free-server/claim-welcome', authenticateToken, async (req, res) =
         backups: FREE_SERVER_LIMITS.backups,
       },
       allocation: { default: allocationId },
-      description: `WolfHost Welcome Trial - Expires ${new Date(Date.now() + FREE_SERVER_LIFETIME_MS).toLocaleDateString()}`,
+      description: `wolfXnode Welcome Trial - Expires ${new Date(Date.now() + FREE_SERVER_LIFETIME_MS).toLocaleDateString()}`,
       start_on_completion: false,
-      external_id: `wolfhost-welcome-${userId}-${Date.now()}`,
+      external_id: `wolfxnode-welcome-${userId}-${Date.now()}`,
     };
 
     let pteroResponse;
@@ -3530,14 +3530,14 @@ app.post('/api/wolf/chat', chatLimiter, authenticateToken, [
       return res.status(400).json({ success: false, error: 'Message is required' });
     }
 
-    const systemContext = `You are W.O.L.F (Wise Operational Learning Function), the AI assistant for WolfHost - a game server hosting platform. You help users navigate the platform and answer questions about:
+    const systemContext = `You are W.O.L.F (Wise Operational Learning Function), the AI assistant for wolfXnode - a WhatsApp bot hosting platform. You help users navigate the platform and answer questions about:
 - Creating and managing game servers (Minecraft, etc.)
 - Wallet top-ups via M-Pesa or Card payments (minimum 50 KSH)
 - Server tiers: Limited (50 KSH), Unlimited (100 KSH), Admin (250 KSH)
 - Billing and transaction history
 - Referral program (refer 10 friends who buy servers to earn Admin Panel access)
 - Account settings
-Keep responses concise, friendly, and helpful. If asked about something unrelated to WolfHost, politely redirect to hosting topics.`;
+Keep responses concise, friendly, and helpful. If asked about something unrelated to wolfXnode, politely redirect to hosting topics.`;
 
     const fullQuery = `${systemContext}\n\nUser: ${message.trim()}`;
     const apiUrl = `https://apiskeith.vercel.app/ai/grok?q=${encodeURIComponent(fullQuery)}`;
@@ -4228,7 +4228,7 @@ const BOT_DEPLOYMENT_PRICE = 50;
 // DIRECT BOT RUNNER (wolfdeploy-style — no Pterodactyl)
 // ============================================================
 const DIRECT_DEPLOYMENTS_FILE = path.join(__dirname, 'direct_deployments.json');
-const BOTS_BASE_DIR = process.env.BOTS_BASE_DIR || path.join(tmpdir(), 'wolfhost-bots');
+const BOTS_BASE_DIR = process.env.BOTS_BASE_DIR || path.join(tmpdir(), 'wolfxnode-bots');
 const BOT_LOG_DIR   = path.join(__dirname, 'bot_logs');
 const BOT_RUNNER    = path.join(__dirname, 'bot_runner.cjs');
 fs.mkdirSync(BOTS_BASE_DIR, { recursive: true });
@@ -4329,7 +4329,7 @@ function setDirectStatus(id, status) {
   toRestart.forEach((d, idx) => {
     setTimeout(() => {
       serverLog(`[DirectRunner] Restarting dead deployment ${d.id} (${d.botName || d.botId})`);
-      appendBotLog(d.id, 'info', '[WolfHost] Server restarted — bot was not running, restarting now…');
+      appendBotLog(d.id, 'info', '[wolfXnode] Server restarted — bot was not running, restarting now…');
       const saved = loadDirectDeployments();
       const entry = saved.find(s => s.id === d.id);
       if (entry) { entry.status = 'queued'; entry.updatedAt = new Date().toISOString(); saveDirectDeployments(saved); }
@@ -4385,7 +4385,7 @@ async function runDirectDeployment(deployId, repoUrl, mainFile, envVars) {
       addDirectLog(deployId, 'info', `Preserving existing .env on restart (port=${_botPort}).`);
     }
 
-    // Step 4: launch bot as a DETACHED runner process (survives WolfHost restarts)
+    // Step 4: launch bot as a DETACHED runner process (survives wolfXnode restarts)
     const entryFile = mainFile || 'index.js';
     addDirectLog(deployId, 'info', `Launching detached runner: node ${entryFile}`);
     const botEnv = {
@@ -4393,7 +4393,7 @@ async function runDirectDeployment(deployId, repoUrl, mainFile, envVars) {
       ...envVars,
       PORT: String(_botPort),
       NODE_ENV: 'production',
-      WOLFHOST_LOG_FILE: getBotLogFile(deployId),
+      WOLFXNODE_LOG_FILE: getBotLogFile(deployId),
     };
     addDirectLog(deployId, 'info', `Assigned bot port: ${_botPort}`);
     const runner = spawn(process.execPath, [BOT_RUNNER, entryFile, deployDir], {
@@ -4542,10 +4542,10 @@ app.post('/api/bots/direct/:id/stop', authenticateToken, async (req, res) => {
   const dep = all.find(d => d.id === req.params.id && d.userId === userId);
   if (!dep) return res.status(404).json({ success: false, message: 'Deployment not found' });
 
-  appendBotLog(req.params.id, 'warn', '[WolfHost] Stop requested — sending SIGTERM to runner…');
+  appendBotLog(req.params.id, 'warn', '[wolfXnode] Stop requested — sending SIGTERM to runner…');
   killRunnerPid(dep, req.params.id);
   setDirectStatus(req.params.id, 'stopped');
-  appendBotLog(req.params.id, 'info', '[WolfHost] Bot stopped.');
+  appendBotLog(req.params.id, 'info', '[wolfXnode] Bot stopped.');
   return res.json({ success: true });
 });
 
@@ -4556,9 +4556,9 @@ app.post('/api/bots/direct/:id/restart', authenticateToken, async (req, res) => 
   const dep = all.find(d => d.id === req.params.id && d.userId === userId);
   if (!dep) return res.status(404).json({ success: false, message: 'Deployment not found' });
 
-  appendBotLog(req.params.id, 'info', '[WolfHost] Restart requested — stopping old process…');
+  appendBotLog(req.params.id, 'info', '[wolfXnode] Restart requested — stopping old process…');
   killRunnerPid(dep, req.params.id);
-  appendBotLog(req.params.id, 'info', '[WolfHost] Restarting bot…');
+  appendBotLog(req.params.id, 'info', '[wolfXnode] Restarting bot…');
   setDirectStatus(req.params.id, 'queued');
   runDirectDeployment(req.params.id, dep.repoUrl, dep.mainFile, dep.envVars || {}).catch(() => {});
   return res.json({ success: true });
@@ -4825,7 +4825,7 @@ app.post('/api/bots/deploy', authenticateToken, [
       },
       feature_limits: { databases: 0, allocations: 1, backups: 1 },
       allocation: { default: allocationId },
-      description: `WolfHost Bot: ${bot.name}`,
+      description: `wolfXnode Bot: ${bot.name}`,
       start_on_completion: true,
       external_id: `wolfbot-${userId}-${Date.now()}`,
     };
@@ -5025,7 +5025,7 @@ process.on('uncaughtException', (err) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', async () => {
-  console.log(`WolfHost server running on port ${PORT}`);
+  console.log(`wolfXnode server running on port ${PORT}`);
   console.log(`Security: helmet=ON, cors=RESTRICTED, rate-limiting=OFF, input-validation=ON`);
   console.log(`Mode: ${IS_PRODUCTION ? 'PRODUCTION' : 'DEVELOPMENT'}`);
 
