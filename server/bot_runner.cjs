@@ -37,17 +37,28 @@ const bot = spawn(process.execPath, ['--no-warnings', ENTRY], {
   stdio: ['ignore', 'pipe', 'pipe'],
 });
 
+// Buffer incomplete lines until a newline arrives
+let stdoutBuf = '';
+let stderrBuf = '';
+
 bot.stdout.on('data', chunk => {
-  const lines = chunk.toString().split('\n');
+  stdoutBuf += chunk.toString();
+  const lines = stdoutBuf.split('\n');
+  stdoutBuf = lines.pop(); // last element may be incomplete — hold it
   lines.forEach(l => { if (l && !SUPPRESS_RE.test(l)) writeLine('info', l); });
 });
 
 bot.stderr.on('data', chunk => {
-  const lines = chunk.toString().split('\n');
+  stderrBuf += chunk.toString();
+  const lines = stderrBuf.split('\n');
+  stderrBuf = lines.pop(); // last element may be incomplete — hold it
   lines.forEach(l => { if (l && !SUPPRESS_RE.test(l)) writeLine('warn', l); });
 });
 
 bot.on('close', code => {
+  // Flush any remaining buffered output that didn't end with \n
+  if (stdoutBuf && !SUPPRESS_RE.test(stdoutBuf)) writeLine('info', stdoutBuf);
+  if (stderrBuf && !SUPPRESS_RE.test(stderrBuf)) writeLine('warn', stderrBuf);
   writeLine('info', `[Runner] Process exited with code ${code}`);
   logStream.end();
   process.exit(code || 0);
