@@ -31,9 +31,13 @@ writeLine('info', `[Runner] Starting: node ${ENTRY}`);
 // Patterns to suppress — internal Node.js noise that bots can't control
 const SUPPRESS_RE = /MODULE_TYPELESS_PACKAGE_JSON|Reparsing as ES module because module syntax|To eliminate this warning, add "type": "module"|Use `node --trace-warnings/;
 
-const bot = spawn(process.execPath, ['--no-warnings', ENTRY], {
+// Use `script -q` to allocate a real PTY so ALL grandchild processes (e.g.
+// interactive setup wizards spawned by the bot) share the same stdin/stdout.
+// Without a PTY, writing to bot.stdin only reaches the direct child, not its
+// sub-processes — which is why interactive menus don't respond to input.
+const bot = spawn('script', ['-q', '-c', `${process.execPath} --no-warnings ${ENTRY}`, '/dev/null'], {
   cwd: BOT_DIR,
-  env: { ...process.env, NODE_NO_WARNINGS: '1' },
+  env: { ...process.env, NODE_NO_WARNINGS: '1', TERM: 'xterm-256color', FORCE_COLOR: '1' },
   stdio: ['pipe', 'pipe', 'pipe'],
 });
 
