@@ -33,13 +33,13 @@ const SERVER_TIERS = {
     price: 50,
     color: 'primary',
     specs: { cpu: '1 vCPU', ram: '5GB', storage: '10GB', slots: '10 Slots' },
-    features: ['5GB RAM Allocation', 'Nest 5 (Wolfhost)', 'Basic DDoS Protection', 'Community Support'],
+    features: ['5GB RAM Allocation', 'Nest 5 (wolfXnode)', 'Basic DDoS Protection', 'Community Support'],
   },
   Unlimited: {
     price: 100,
     color: 'blue',
     specs: { cpu: '2 vCPU', ram: 'Unlimited', storage: '40GB', slots: 'Unlimited' },
-    features: ['Full RAM Access', 'Nest 5 (Wolfhost)', 'Advanced DDoS Protection', 'Priority Support'],
+    features: ['Full RAM Access', 'Nest 5 (wolfXnode)', 'Advanced DDoS Protection', 'Priority Support'],
   },
   Admin: {
     price: 250,
@@ -680,9 +680,9 @@ const Servers = () => {
                 </div>
 
                 <div className="bg-black/40 border border-primary/10 rounded-lg p-4 h-64 overflow-y-auto font-mono text-sm">
-                  <div className="text-primary">$ systemctl start wolfhost</div>
+                  <div className="text-primary">$ systemctl start wolfxnode</div>
                   <div className="text-gray-500">[INFO] Starting server instance...</div>
-                  <div className="text-gray-500">[INFO] Loading configuration from /etc/wolfhost/server.conf</div>
+                  <div className="text-gray-500">[INFO] Loading configuration from /etc/wolfxnode/server.conf</div>
                   <div className="text-primary">[OK] Server initialized on {selectedServer.ip}:25565</div>
                   <div className="text-gray-500">[INFO] Memory allocated: {selectedServer.ram || '8GB'}</div>
                   <div className="text-gray-500">[INFO] CPU cores: {selectedServer.cpu || '4'}</div>
@@ -692,7 +692,7 @@ const Servers = () => {
                     <div className="text-gray-500">[METRICS] CPU: 12% | RAM: 45% | NET: 1.2MB/s</div>
                   </div>
                   <div className="mt-4 flex items-center">
-                    <span className="text-primary">wolfhost@server:~$ </span>
+                    <span className="text-primary">wolfxnode@server:~$ </span>
                     <span className="ml-1 bg-primary/20 px-1 animate-pulse">█</span>
                   </div>
                 </div>

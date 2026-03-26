@@ -380,7 +380,7 @@ export default function Landing() {
                       <Zap className="h-8 w-8 text-primary/90" />
                     </motion.div>
                     <p className="text-gray-500 font-mono text-sm">
-                      WolfHost Control Panel
+                      wolfXnode Control Panel
                     </p>
                   </div>
                 </div>
@@ -442,7 +442,7 @@ export default function Landing() {
               Ready to Deploy Your Infrastructure?
             </h3>
             <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-              Join thousands of developers and businesses who trust WolfHost for
+              Join thousands of developers and businesses who trust wolfXnode for
               their hosting needs.
             </p>
             <Link to="/register">
@@ -613,7 +613,7 @@ export default function Landing() {
 
           <div className="pt-8 border-t border-primary/10 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-gray-500 font-mono text-sm">
-              &copy; {new Date().getFullYear()} WolfHost Infrastructure. All
+              &copy; {new Date().getFullYear()} wolfXnode. All
               systems operational.
             </p>
             <div className="flex items-center gap-4">

@@ -498,7 +498,7 @@ export default function DirectBotLog() {
       </div>
 
       <div className="p-3 rounded-lg border border-yellow-500/20 bg-yellow-500/5 text-[10px] font-mono text-yellow-300/70 leading-relaxed">
-        ⚠ Direct deployments run as a process on the WolfHost server. They will stop if the server restarts. Use{' '}
+        ⚠ Direct deployments run as a process on the wolfXnode server. They will stop if the server restarts. Use{' '}
         <span className="text-yellow-300 font-bold">Restart</span> to bring the bot back up.
       </div>
     </div>

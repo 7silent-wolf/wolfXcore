@@ -537,7 +537,7 @@ export default function SuperAdmin() {
               type="text"
               value={branding.siteName}
               onChange={e => setBranding(b => ({ ...b, siteName: e.target.value }))}
-              placeholder="WolfHost"
+              placeholder="wolfXnode"
               maxLength={60}
               data-testid="input-site-name"
               className="w-full bg-black/40 border border-primary/20 rounded-lg px-3 py-2 text-sm font-mono focus:border-primary/60 outline-none transition-colors"

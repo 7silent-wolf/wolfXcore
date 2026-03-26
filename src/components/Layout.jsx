@@ -15,7 +15,7 @@ const Layout = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <NeonBackground />
-        <LoadingSpinner size="lg" text="Initializing WolfHost..." />
+        <LoadingSpinner size="lg" text="Initializing wolfXnode..." />
       </div>
     );
   }

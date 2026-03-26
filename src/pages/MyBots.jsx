@@ -371,7 +371,7 @@ export default function MyBots() {
           <div className="flex items-start gap-2.5 p-3 rounded-lg border border-yellow-500/15 bg-yellow-500/5">
             <AlertCircle className="w-4 h-4 text-yellow-500/60 shrink-0 mt-0.5" />
             <p className="text-xs text-gray-500 font-mono leading-relaxed">
-              Direct bots run as processes on the WolfHost server. They will stop if the server restarts — click <strong className="text-gray-400">Restart</strong> to bring them back. Click a card to view live logs.
+              Direct bots run as processes on the wolfXnode server. They will stop if the server restarts — click <strong className="text-gray-400">Restart</strong> to bring them back. Click a card to view live logs.
             </p>
           </div>
         </>

@@ -96,7 +96,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             <div className="w-8 h-8 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center">
               <div className="w-3 h-3 rounded-full bg-primary/80 drop-shadow-[0_0_3px_rgba(var(--primary)/0.4)]" />
             </div>
-            <h1 className="text-xl font-display font-bold text-primary/90">WOLFHOST</h1>
+            <h1 className="text-xl font-display font-bold text-primary/90">wolfXnode</h1>
           </div>
         </div>
 

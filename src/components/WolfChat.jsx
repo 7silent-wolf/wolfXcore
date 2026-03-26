@@ -7,7 +7,7 @@ const WolfChat = () => {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: "Hey there! I'm W.O.L.F — Wise Operational Learning Function. I'm here to help you navigate WolfHost. Ask me anything about servers, payments, referrals, or your account!"
+      content: "Hey there! I'm W.O.L.F — Wise Operational Learning Function. I'm here to help you navigate wolfXnode. Ask me anything about servers, payments, referrals, or your account!"
     }
   ]);
   const [input, setInput] = useState('');

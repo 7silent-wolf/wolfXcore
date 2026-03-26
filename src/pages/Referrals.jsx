@@ -73,8 +73,8 @@ const Referrals = () => {
   const shareReferral = () => {
     if (navigator.share) {
       navigator.share({
-        title: 'Join WolfHost',
-        text: `Sign up for WolfHost using my referral link and get started with server hosting!`,
+        title: 'Join wolfXnode',
+        text: `Sign up for wolfXnode using my referral link and get started with bot hosting!`,
         url: referralLink,
       });
     } else {

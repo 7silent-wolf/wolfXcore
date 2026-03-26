@@ -223,7 +223,7 @@ const Tutorials = () => {
         </div>
         <div>
           <h1 className="text-2xl font-display font-bold text-white">Tutorials</h1>
-          <p className="text-sm font-mono text-gray-400">Learn how to use WolfHost</p>
+          <p className="text-sm font-mono text-gray-400">Learn how to use wolfXnode</p>
         </div>
       </div>
 
