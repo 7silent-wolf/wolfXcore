@@ -50,7 +50,7 @@ const WelcomeFreeServerPopup = ({ onClose }) => {
             </motion.div>
 
             <h2 className="text-2xl font-display font-bold text-white mb-2">
-              Welcome to <span className="text-primary">WOLF</span><span className="text-gray-400">HOST</span>!
+              Welcome to <span className="text-primary">wolf</span><span className="text-gray-400">Xnode</span>!
             </h2>
             <p className="text-gray-400 text-sm mb-6">
               As a new member, you get a <span className="text-primary font-semibold">free 3-day trial server</span> to explore our platform. Claim it now!

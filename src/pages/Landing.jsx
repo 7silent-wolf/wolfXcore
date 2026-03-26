@@ -100,8 +100,8 @@ export default function Landing() {
               </motion.div>
               <div className="ml-3">
                 <span className="text-xl font-display font-bold tracking-widest">
-                  <span className="text-primary">WOLF</span>
-                  <span className="text-gray-400">HOST</span>
+                  <span className="text-primary">wolf</span>
+                  <span className="text-gray-400">Xnode</span>
                 </span>
                 <p className="text-xs text-gray-500 font-mono">
                   I am just an explorer
@@ -478,8 +478,8 @@ export default function Landing() {
                   <Zap className="h-6 w-6 text-primary/90" />
                 </motion.div>
                 <span className="ml-3 text-lg font-display font-bold tracking-widest">
-                  <span className="text-primary">WOLF</span>
-                  <span className="text-gray-400">HOST</span>
+                  <span className="text-primary">wolf</span>
+                  <span className="text-gray-400">Xnode</span>
                 </span>
               </div>
               <p className="text-gray-500 text-sm font-mono leading-relaxed">

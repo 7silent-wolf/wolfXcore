@@ -79,8 +79,8 @@ const Login = () => {
             <Zap className="w-8 h-8 text-primary" />
           </motion.div>
           <h1 className="text-3xl font-display font-bold mb-2">
-            <span className="text-primary">WOLF</span>
-            <span className="text-gray-400">HOST</span>
+            <span className="text-primary">wolf</span>
+            <span className="text-gray-400">Xnode</span>
           </h1>
           <p className="text-gray-400">Sign in to your account</p>
         </div>

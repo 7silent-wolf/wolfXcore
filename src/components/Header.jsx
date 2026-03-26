@@ -163,8 +163,8 @@ const Header = ({ onMenuToggle, isSidebarOpen }) => {
               <span className="text-lg font-display font-bold text-primary/80">W</span>
             </motion.div>
             <span className="hidden sm:block text-lg font-display font-bold">
-              <span className="text-primary/80">WOLF</span>
-              <span className="text-gray-400">HOST</span>
+              <span className="text-primary/80">wolf</span>
+              <span className="text-gray-400">Xnode</span>
             </span>
           </Link>
         </div>
