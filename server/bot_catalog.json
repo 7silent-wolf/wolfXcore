@@ -170,5 +170,61 @@
     "active": true,
     "imageUrl": "",
     "pairUrl": "https://pairing.xcasper.space/"
+  },
+  {
+    "id": "f106a8cd-adc7-44f8-a77b-cfab5628b3f8",
+    "name": "ATTASSA-MD",
+    "description": "Maurice Gift",
+    "repoUrl": "https://github.com/mauricegift/atassa.git",
+    "tag": "whatsapp",
+    "priceKES": 50,
+    "ramMB": 512,
+    "diskMB": 1024,
+    "mainFile": "index.js",
+    "appJsonUrl": "https://raw.githubusercontent.com/mauricegift/atassa/main/app.json",
+    "appJsonName": "atassa-md",
+    "appJsonDescription": "Atassa, a Multi Device Whatsapp Bot built by Gifted Tech to Enhance Whatsapp Communication Experience",
+    "appJsonEnv": {
+      "SESSION_ID": {
+        "description": "Your bot SESSION_ID. Get one from the pairing session page.",
+        "required": true,
+        "value": ""
+      },
+      "MODE": {
+        "description": "Worktype of your bot. Use 'public' (everyone can use it) or 'private' (only bot number).",
+        "required": true,
+        "value": "public"
+      },
+      "TIME_ZONE": {
+        "description": "Your timezone e.g. Africa/Nairobi, America/New_York, Asia/Kolkata",
+        "required": true,
+        "value": "Africa/Nairobi"
+      },
+      "AUTO_LIKE_STATUS": {
+        "description": "Auto-like WhatsApp statuses. Set true or false.",
+        "required": false,
+        "value": "true"
+      },
+      "AUTO_READ_STATUS": {
+        "description": "Auto-view WhatsApp statuses. Set true or false.",
+        "required": false,
+        "value": "true"
+      },
+      "DATABASE_URL": {
+        "description": "PostgreSQL connection URL. Leave blank to use the auto-provisioned Heroku Postgres addon, or supply your own (Neon, Supabase, etc.). Falls back to SQLite if empty and no addon is attached.",
+        "required": false,
+        "value": ""
+      }
+    },
+    "appJsonKeywords": [
+      "atassa",
+      "gifted-baileys",
+      "gifted-btns",
+      "gifted-api"
+    ],
+    "createdAt": "2026-03-26T17:38:38.695Z",
+    "active": true,
+    "imageUrl": "",
+    "pairUrl": "https://session.giftedtech.co.ke/"
   }
 ]
