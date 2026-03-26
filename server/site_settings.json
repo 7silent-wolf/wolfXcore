@@ -7,7 +7,5 @@
   "siteName": "wolfXnode",
   "siteTagline": "I am just an explorer",
   "theme": "neon-green",
-  "themeVars": {
-    "background": "0 81% 49%"
-  }
+  "themeVars": {}
 }
