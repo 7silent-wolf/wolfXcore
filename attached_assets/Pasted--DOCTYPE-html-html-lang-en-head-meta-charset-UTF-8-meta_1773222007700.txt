@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>WOLFBOT — Status</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#020c06;--surface:#050f08;--card:#07140a;
+    --neon:#00ff88;--neon2:#00cfff;--warn:#ff3c3c;
+    --border:#00ff8830;--text:#b0ffcc;--muted:#3a6b4a;
+    --font-mono:'Share Tech Mono',monospace;
+    --font-head:'Orbitron',sans-serif
+  }
+  html{scrollbar-color:var(--neon) var(--bg);scrollbar-width:thin}
+  body{
+    background:var(--bg);
+    background-image:
+      linear-gradient(0deg,transparent 24%,#00ff8806 25%,#00ff8806 26%,transparent 27%,transparent 74%,#00ff8806 75%,#00ff8806 76%,transparent 77%),
+      linear-gradient(90deg,transparent 24%,#00ff8806 25%,#00ff8806 26%,transparent 27%,transparent 74%,#00ff8806 75%,#00ff8806 76%,transparent 77%);
+    background-size:40px 40px;
+    color:var(--text);font-family:var(--font-mono);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:32px 16px
+  }
+  header{text-align:center;margin-bottom:36px;position:relative}
+  .wolf{font-size:56px;line-height:1;margin-bottom:10px;
+        filter:drop-shadow(0 0 16px #00ff88) drop-shadow(0 0 32px #00ff8880)}
+  h1{
+    font-family:var(--font-head);font-size:32px;font-weight:900;
+    letter-spacing:4px;text-transform:uppercase;
+    color:#fff;
+    text-shadow:0 0 10px var(--neon),0 0 30px var(--neon),0 0 60px #00ff8866;
+  }
+  .ver{font-size:12px;letter-spacing:3px;color:var(--neon);margin-top:6px;text-shadow:0 0 8px var(--neon)}
+  .status-pill{
+    display:inline-flex;align-items:center;gap:10px;padding:8px 22px;
+    border-radius:3px;font-size:13px;font-weight:700;letter-spacing:2px;margin-top:16px;
+    background:#00ff8812;color:#00ff88;
+    border:1px solid #00ff88;
+    text-shadow:0 0 8px #00ff88;
+    box-shadow:0 0 16px #00ff8840,inset 0 0 16px #00ff8808
+  }
+  .dot{
+    width:10px;height:10px;border-radius:50%;background:#00ff88;
+    box-shadow:0 0 6px #00ff88,0 0 12px #00ff88;
+    animation:blink 1.4s ease-in-out infinite
+  }
+  @keyframes blink{0%,100%{opacity:1;box-shadow:0 0 6px #00ff88,0 0 18px #00ff88}50%{opacity:.3;box-shadow:none}}
+  .scan{
+    position:absolute;top:0;left:-10%;width:120%;height:2px;
+    background:linear-gradient(90deg,transparent,var(--neon),transparent);
+    animation:scan 3s linear infinite;opacity:.4
+  }
+  @keyframes scan{0%{top:-5%}100%{top:110%}}
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:12px;width:100%;max-width:740px;margin-bottom:18px
+  }
+  .card{
+    background:var(--card);border:1px solid var(--border);
+    border-top:1px solid #00ff8844;border-radius:3px;padding:16px 18px;
+    position:relative;overflow:hidden;transition:border-color .2s,box-shadow .2s
+  }
+  .card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,#00ff8888,transparent)
+  }
+  .card:hover{border-color:#00ff8866;box-shadow:0 0 20px #00ff8818}
+  .card-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px}
+  .card-value{font-size:20px;font-weight:700;color:#fff;word-break:break-word;text-shadow:0 0 10px #00ff8866}
+  .card-value.accent{color:var(--neon);text-shadow:0 0 10px var(--neon)}
+  .card-value.mode{color:#00ff88;text-shadow:0 0 10px #00ff88}
+  .card-value.uptime{font-size:15px;color:#a3ffcb;font-variant-numeric:tabular-nums}
+  .card-value.dim{font-size:13px;color:var(--muted)}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;width:100%;max-width:740px;margin-bottom:18px}
+  .badge{font-size:11px;font-weight:600;padding:5px 14px;border-radius:3px;letter-spacing:1px}
+  .platform-card{
+    background:var(--card);border:1px solid var(--border);border-radius:3px;
+    padding:14px 20px;width:100%;max-width:740px;text-align:center;margin-bottom:18px;
+    position:relative;overflow:hidden
+  }
+  .platform-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,#00cfff88,transparent)
+  }
+  .platform-card .p-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:4px}
+  .platform-card .plat{font-size:15px;font-weight:700;color:var(--neon2);letter-spacing:1px;text-shadow:0 0 10px var(--neon2)}
+  .links{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
+  a.btn{
+    padding:10px 22px;border-radius:3px;font-size:12px;font-weight:700;
+    letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;
+    font-family:var(--font-mono);transition:.2s
+  }
+  a.btn-primary{
+    background:transparent;color:var(--neon);border:1px solid var(--neon);
+    box-shadow:0 0 12px #00ff8840,inset 0 0 12px #00ff8808;text-shadow:0 0 8px var(--neon)
+  }
+  a.btn-ghost{
+    background:transparent;color:var(--neon2);border:1px solid #00cfff66;box-shadow:0 0 10px #00cfff20
+  }
+  a.btn:hover{filter:brightness(1.25);box-shadow:0 0 20px currentColor}
+  footer{font-size:11px;color:var(--muted);text-align:center;letter-spacing:1px}
+  footer span{color:var(--neon);font-weight:700;text-shadow:0 0 8px var(--neon)}
+  @media(max-width:480px){h1{font-size:24px;letter-spacing:2px}.card-value{font-size:16px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="scan"></div>
+  <div class="wolf">🐺</div>
+  <h1>WOLFBOT</h1>
+  <div class="ver">v1.1.5 // STATUS TERMINAL</div>
+  <div class="status-pill"><div class="dot"></div>ONLINE</div>
+</header>
+
+<div class="grid">
+  <div class="card">
+    <div class="card-label">// UPTIME</div>
+    <div class="card-value uptime">2h 14m 37s</div>
+  </div>
+  <div class="card">
+    <div class="card-label">// COMMANDS</div>
+    <div class="card-value accent">351</div>
+  </div>
+  <div class="card">
+    <div class="card-label">// PREFIX</div>
+    <div class="card-value accent">.</div>
+  </div>
+  <div class="card">
+    <div class="card-label">// MODE</div>
+    <div class="card-value mode">PUBLIC</div>
+  </div>
+  <div class="card">
+    <div class="card-label">// OWNER</div>
+    <div class="card-value" style="font-size:14px;color:#a3ffcb">+254700000000</div>
+  </div>
+  <div class="card">
+    <div class="card-label">// LAST PING</div>
+    <div class="card-value dim">09:45:12 AM</div>
+  </div>
+</div>
+
+<div class="badges">
+  <span class="badge" style="background:#00ff8818;color:#00ff88;border:1px solid #00ff8855">ANTI-SPAM <b>ON</b></span>
+  <span class="badge" style="background:#44418;color:#666;border:1px solid #44455">ANTI-BUG <b>OFF</b></span>
+  <span class="badge" style="background:#44418;color:#666;border:1px solid #44455">ANTI-LINK <b>OFF</b></span>
+</div>
+
+<div class="platform-card">
+  <div class="p-label">// RUNTIME ENVIRONMENT</div>
+  <div class="plat">🌀 Replit</div>
+</div>
+
+<div class="links">
+  <a class="btn btn-primary" href="/api/status">[ JSON STATUS ]</a>
+  <a class="btn btn-ghost"   href="/health">[ HEALTH CHECK ]</a>
+</div>
+
+<footer>
+  POWERED BY <span>WOLF TECH</span> &nbsp;//&nbsp; AUTO-REFRESH 30s
+</footer>
+</body>
+</html>

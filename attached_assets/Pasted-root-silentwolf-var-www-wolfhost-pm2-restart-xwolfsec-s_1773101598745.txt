@@ -1,0 +1,50 @@
+root@silentwolf:/var/www/wolfhost# pm2 restart xwolfsec && sleep 3 && curl -s http://127.0.0.1:4000/api/free-server/status -H "Authoriz
+ation: Bearer test"
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [xwolfsec](ids: [ 2 ])
+[PM2] [xwolfsec](2) ✓
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬─────
+─────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watc
+hing │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼─────
+─────┤
+│ 7  │ pairwolf        │ default     │ 1.0.0   │ fork    │ 1815748  │ 2D     │ 0    │ online    │ 0%       │ 27.4mb   │ root     │ disa
+bled │
+│ 8  │ wolfapis        │ default     │ N/A     │ fork    │ 1859288  │ 2D     │ 0    │ online    │ 0%       │ 9.7mb    │ root     │ disa
+bled │
+│ 0  │ wolfhost        │ default     │ 0.0.0   │ fork    │ 3632045  │ 5m     │ 23   │ online    │ 0%       │ 78.4mb   │ root     │ disa
+bled │
+│ 6  │ wolfmusicapi    │ default     │ 1.0.0   │ fork    │ 3554403  │ 5h     │ 4    │ online    │ 0%       │ 30.3mb   │ root     │ disa
+bled │
+│ 12 │ wolftech        │ default     │ N/A     │ fork    │ 3623388  │ 58m    │ 0    │ online    │ 0%       │ 20.3mb   │ root     │ disa
+bled │
+│ 2  │ xwolfsec        │ default     │ 0.0.0   │ fork    │ 3632349  │ 0s     │ 3    │ online    │ 0%       │ 27.9mb   │ root     │ disa
+bled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴─────
+─────┘
+{"success":false,"message":"Invalid or expired token"}root@silentwolf:/var/www/wolfhost# ^C
+root@silentwolf:/var/www/wolfhost# ^C
+root@silentwolf:/var/www/wolfhost# ^C
+root@silentwolf:/var/www/wolfhost# pm2 list
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬─────
+─────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watc
+hing │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼─────
+─────┤
+│ 7  │ pairwolf        │ default     │ 1.0.0   │ fork    │ 1815748  │ 2D     │ 0    │ online    │ 0%       │ 31.3mb   │ root     │ disa
+bled │
+│ 8  │ wolfapis        │ default     │ N/A     │ fork    │ 1859288  │ 2D     │ 0    │ online    │ 0%       │ 9.6mb    │ root     │ disa
+bled │
+│ 0  │ wolfhost        │ default     │ 0.0.0   │ fork    │ 3632045  │ 43m    │ 23   │ online    │ 0%       │ 25.4mb   │ root     │ disa
+bled │
+│ 6  │ wolfmusicapi    │ default     │ 1.0.0   │ fork    │ 3554403  │ 6h     │ 4    │ online    │ 0%       │ 42.9mb   │ root     │ disa
+bled │
+│ 12 │ wolftech        │ default     │ N/A     │ fork    │ 3623388  │ 95m    │ 0    │ online    │ 0%       │ 19.1mb   │ root     │ disa
+bled │
+│ 2  │ xwolfsec        │ default     │ 0.0.0   │ fork    │ 3632349  │ 37m    │ 3    │ online    │ 0%       │ 48.9mb   │ root     │ disa
+bled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴─────
+─────┘
+root@silentwolf:/var/www/wolfhost#

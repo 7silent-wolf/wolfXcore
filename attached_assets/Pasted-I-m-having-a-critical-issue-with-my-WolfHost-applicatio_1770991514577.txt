@@ -1,0 +1,53 @@
+I'm having a critical issue with my WolfHost application (repository: https://github.com/nk-apex/wolfhost.git)
+
+**The Problem:**
+When trying to login or register on the live site (host.xwolf.space), I get this error in the browser console:
+"Unexpected token '<', "<!doctype "... is not valid JSON"
+
+This means the frontend is receiving HTML instead of JSON from the API endpoints. The API calls are being served the frontend HTML page instead of reaching the backend.
+
+**What I've confirmed:**
+1. The backend API works when tested directly on the server:
+   ```bash
+   curl -X POST http://localhost:3001/api/auth/login -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"test123"}'
+Returns: {"success":true,"message":"Login successful","user":{...}}
+
+The backend routes ARE defined in server/index.js (I can see app.post for /api/auth/login, /api/auth/register, etc.)
+
+The issue persists through Nginx - API requests are being routed to the frontend (port 5000) instead of the backend (port 3001)
+
+What needs to be fixed:
+
+Check the API endpoint URLs in the frontend code
+
+Look in src/services/api.js and src/context/AuthContext.jsx
+
+Verify that API calls are going to /api/auth/login and not to a different path
+
+Check if there's a hardcoded URL or missing /api prefix
+
+Verify the Vite proxy configuration
+
+Check vite.config.js/ts to ensure the proxy is properly configured for development
+
+For production, we're using Nginx, so the proxy config shouldn't affect the build
+
+Check if there's a catch-all route in the backend
+
+Look for app.get('*') or app.use('*') that might be serving HTML
+
+Ensure API routes are defined BEFORE any catch-all routes
+
+Verify the build process
+
+When running npm run build, are the environment variables properly injected?
+
+Check if the built frontend is correctly pointing to /api endpoints
+
+Examine the authentication flow
+
+Look at how the login function in AuthContext makes the API call
+
+Check if there's an interceptor that's modifying requests
+
+Please help me fix this so that API requests go to the backend correctly and return JSON instead of HTML. The site is deployed on a VPS with Nginx as reverse proxy (API on port 3001, frontend on port 5000).

@@ -1,0 +1,128 @@
+{
+  "1": [
+    {
+      "id": "1774530038736-dvrcfs",
+      "type": "server",
+      "title": "Bot Deploying",
+      "message": "Your \"JUNE-X\" bot is starting up!",
+      "read": false,
+      "createdAt": "2026-03-26T13:00:38.736Z"
+    },
+    {
+      "id": "1774529814870-5fv8ps",
+      "type": "server",
+      "title": "Bot Deploying",
+      "message": "Your \"JUNE-X\" bot is starting up!",
+      "read": false,
+      "createdAt": "2026-03-26T12:56:54.870Z"
+    },
+    {
+      "id": "1774526486784-9rbyso",
+      "type": "server",
+      "title": "Bot Deploying",
+      "message": "Your \"WOLFBOT\" bot is starting up!",
+      "read": false,
+      "createdAt": "2026-03-26T12:01:26.784Z"
+    },
+    {
+      "id": "1774525129852-dhlx60",
+      "type": "server",
+      "title": "Bot Deploying",
+      "message": "Your \"WOLFBOT\" bot is starting up!",
+      "read": false,
+      "createdAt": "2026-03-26T11:38:49.852Z"
+    },
+    {
+      "id": "1774524604037-x4kcds",
+      "type": "server",
+      "title": "Bot Deploying",
+      "message": "Your \"WOLFBOT\" bot is starting up!",
+      "read": false,
+      "createdAt": "2026-03-26T11:30:04.037Z"
+    },
+    {
+      "id": "1774524190241-2jpk44",
+      "type": "server",
+      "title": "Bot Deploying",
+      "message": "Your \"WOLFBOT\" bot is starting up!",
+      "read": false,
+      "createdAt": "2026-03-26T11:23:10.241Z"
+    },
+    {
+      "id": "1774523620610-2lo3rw",
+      "type": "server",
+      "title": "Bot Deploying",
+      "message": "Your \"WOLFBOT\" bot is starting up!",
+      "read": false,
+      "createdAt": "2026-03-26T11:13:40.610Z"
+    },
+    {
+      "id": "1774523070899-7pdo22",
+      "type": "server",
+      "title": "Bot Deploying",
+      "message": "Your \"WOLFBOT\" bot is starting up!",
+      "read": false,
+      "createdAt": "2026-03-26T11:04:30.899Z"
+    },
+    {
+      "id": "1774180537600-sornrz",
+      "type": "server",
+      "title": "Bot Deploying",
+      "message": "Your \"WOLFBOT\" bot is starting up!",
+      "read": true,
+      "createdAt": "2026-03-22T11:55:37.600Z"
+    },
+    {
+      "id": "1773096218153-gm5kjn",
+      "type": "server",
+      "title": "Server Created",
+      "message": "Your \"my-123\" server (Limited plan) has been deployed successfully!",
+      "read": false,
+      "createdAt": "2026-03-09T22:43:38.153Z"
+    },
+    {
+      "id": "1772027498212-ai7pbc",
+      "type": "server",
+      "title": "Server Created",
+      "message": "Your \"kip-0\" server (Limited plan) has been deployed successfully!",
+      "read": false,
+      "createdAt": "2026-02-25T13:51:38.212Z"
+    },
+    {
+      "id": "1771106129442-3hg1a3",
+      "type": "server",
+      "title": "Server Deployed",
+      "message": "Your bot has been deployed successfully from GitHub! Server: wolf-deploy-1771106129058",
+      "read": true,
+      "createdAt": "2026-02-14T21:55:29.442Z"
+    },
+    {
+      "id": "1770991877676-z72qgw",
+      "type": "server",
+      "title": "Free Trial Server Ready!",
+      "message": "Your free 3-day trial server \"wolf-welcome-trial\" is live! It expires on 2/16/2026.",
+      "read": true,
+      "createdAt": "2026-02-13T14:11:17.676Z"
+    }
+  ],
+  "45": [
+    {
+      "id": "1772142758803-ml0hs0",
+      "type": "welcome",
+      "title": "Welcome to WolfHost!",
+      "message": "Your account has been created. Log in to claim your free 3-day trial server!",
+      "read": true,
+      "createdAt": "2026-02-26T21:52:38.803Z"
+    }
+  ],
+  "163": [
+    {
+      "id": "1771325220091-42njhg",
+      "type": "welcome",
+      "title": "Welcome to WolfHost!",
+      "message": "Your account has been created and you've been automatically joined to our community groups. Your free trial server is being set up!",
+      "read": true,
+      "createdAt": "2026-02-17T10:47:00.091Z"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+root@silentwolf:/var/www/wolfhost# pm2 save
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+root@silentwolf:/var/www/wolfhost# curl -s http://127.0.0.1:3001/api/tutorials/test-id/likes
+{"success":true,"count":0,"liked":false}root@silentwolf:/var/www/wolfhost#
+root@silentwolf:/var/www/wolfhost# grep -rn "proxy_pass\|server_name" /etc/nginx/sites-enabled/*
+/etc/nginx/sites-enabled/10-pterodactyl.conf:3:    server_name panel.xwolf.space;
+/etc/nginx/sites-enabled/10-pterodactyl.conf:62:    server_name panel.xwolf.space;
+/etc/nginx/sites-enabled/20-default.conf:5:  server_name node.xwolf.space panel.xwolf.space;
+/etc/nginx/sites-enabled/20-default.conf:16:  server_name node.xwolf.space panel.xwolf.space;
+/etc/nginx/sites-enabled/20-default.conf:34:    proxy_pass http://localhost:5000;
+/etc/nginx/sites-enabled/apis.xwolf.space:2:    server_name apis.xwolf.space;
+/etc/nginx/sites-enabled/apis.xwolf.space:5:        proxy_pass http://localhost:5000;
+/etc/nginx/sites-enabled/apis.xwolf.space:30:    server_name apis.xwolf.space;
+/etc/nginx/sites-enabled/pair.xwolf.space:2:    server_name pair.xwolf.space;
+/etc/nginx/sites-enabled/pair.xwolf.space:5:        proxy_pass http://localhost:3002;
+/etc/nginx/sites-enabled/pair.xwolf.space:29:    server_name pair.xwolf.space;
+/etc/nginx/sites-enabled/wolfdeploy.conf:10:    server_name deploy.xwolf.space;
+/etc/nginx/sites-enabled/wolfdeploy.conf:23:    server_name deploy.xwolf.space;
+/etc/nginx/sites-enabled/wolfdeploy.conf:40:        proxy_pass http://localhost:3003;
+/etc/nginx/sites-enabled/wolfhost.conf:5:    server_name host.xwolf.space;
+/etc/nginx/sites-enabled/wolfhost.conf:16:    server_name host.xwolf.space;
+/etc/nginx/sites-enabled/wolfhost.conf:33:        proxy_pass http://127.0.0.1:4000;
+/etc/nginx/sites-enabled/wolftech:2:    server_name deployment.xwolf.space;
+/etc/nginx/sites-enabled/wolftech:5:        proxy_pass http://localhost:5001;
+/etc/nginx/sites-enabled/wolftech:29:    server_name deployment.xwolf.space;
+/etc/nginx/sites-enabled/xwolfsec.xwolf.space:3:    server_name xwolfsec.xwolf.space;
+/etc/nginx/sites-enabled/xwolfsec.xwolf.space:12:        proxy_pass http://localhost:3002;
+/etc/nginx/sites-enabled/xwolfsec.xwolf.space:26:    server_name xwolfsec.xwolf.space;
+root@silentwolf:/var/www/wolfhost#

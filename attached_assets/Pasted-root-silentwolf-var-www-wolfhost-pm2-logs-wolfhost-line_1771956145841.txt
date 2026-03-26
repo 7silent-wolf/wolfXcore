@@ -1,0 +1,55 @@
+root@silentwolf:/var/www/wolfhost# pm2 logs wolfhost --lines 20
+[TAILING] Tailing last 20 lines for [wolfhost] process (change the val
+ue with --lines option)
+/root/.pm2/logs/wolfhost-error.log last 20 lines:
+11|wolfhos |     at internalConnectMultiple (node:net:1134:18)
+11|wolfhos |     at internalConnectMultiple (node:net:1210:5)
+11|wolfhos |     at afterConnectMultiple (node:net:1715:7)
+11|wolfhos | 11:30:35 AM [vite] http proxy error: /api/auth/login
+11|wolfhos | AggregateError [ECONNREFUSED]:
+11|wolfhos |     at internalConnectMultiple (node:net:1134:18)
+11|wolfhos |     at internalConnectMultiple (node:net:1210:5)
+11|wolfhos |     at afterConnectMultiple (node:net:1715:7)
+11|wolfhos | 11:30:35 AM [vite] http proxy error: /api/auth/login
+11|wolfhos | AggregateError [ECONNREFUSED]:
+11|wolfhos |     at internalConnectMultiple (node:net:1134:18)
+11|wolfhos |     at internalConnectMultiple (node:net:1210:5)
+11|wolfhos |     at afterConnectMultiple (node:net:1715:7)
+11|wolfhos | 11:33:19 AM [vite] http proxy error: /api/auth/login
+11|wolfhos | AggregateError [ECONNREFUSED]:
+11|wolfhos |     at internalConnectMultiple (node:net:1134:18)
+11|wolfhos |     at internalConnectMultiple (node:net:1210:5)
+11|wolfhos |     at afterConnectMultiple (node:net:1715:7)
+11|wolfhos | SUPER_ADMIN_USERNAME is not set
+11|wolfhos | PAYSTACK_SECRET_KEY is not set
+
+/root/.pm2/logs/wolfhost-out.log last 20 lines:
+11|wolfhos | Mode: PRODUCTION
+11|wolfhos | WolfHost server running on port 5000
+11|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+11|wolfhos | Mode: PRODUCTION
+11|wolfhos | WolfHost server running on port 5000
+11|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+11|wolfhos | Mode: PRODUCTION
+11|wolfhos | WolfHost server running on port 5000
+11|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+11|wolfhos | Mode: PRODUCTION
+11|wolfhos | 
+11|wolfhos | > vite_react_shadcn_ts@0.0.0 start
+11|wolfhos | > vite preview --host 0.0.0.0 --port $PORT
+11|wolfhos | 
+11|wolfhos |   ➜  Local:   http://localhost:3001/
+11|wolfhos |   ➜  Network: http://62.171.170.186:3001/
+11|wolfhos |   ➜  Network: http://172.18.0.1:3001/
+11|wolfhos | WolfHost server running on port 5000
+11|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+11|wolfhos | Mode: PRODUCTION
+
+11|wolfhost  | WolfHost server running on port 5000
+11|wolfhost  | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON,
+ input-validation=ON
+11|wolfhost  | Mode: PRODUCTION

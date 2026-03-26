@@ -1,0 +1,85 @@
+[
+  {
+    "id": "f3bd7c98-757c-4e09-8cbc-80753ccf08e1",
+    "name": "WOLFBOT",
+    "description": "Silent Wolf",
+    "repoUrl": "https://github.com/7silent-wolf/silentwolf",
+    "tag": "bot",
+    "priceKES": 50,
+    "ramMB": 512,
+    "diskMB": 1024,
+    "mainFile": "index.js",
+    "appJsonUrl": "https://raw.githubusercontent.com/7silent-wolf/silentwolf/main/app.json",
+    "appJsonName": "WOLFBOT",
+    "appJsonDescription": "Professional WhatsApp Bot with auto-session authentication",
+    "appJsonEnv": {
+      "SESSION_ID": {
+        "description": "REQUIRED: Your WhatsApp session ID. Must begin with 'WOLF-BOT:'",
+        "value": "",
+        "required": true
+      },
+      "PTERODACTYL_KEY": {
+        "description": "OPTIONAL: Your Pterodactyl Application API key (ptlc_...). Only needed if you use panel commands.",
+        "value": "",
+        "required": false
+      },
+      "PTERODACTYL_URL": {
+        "description": "OPTIONAL: Your Pterodactyl panel URL (e.g. https://panel.example.com). Only needed if you use panel commands.",
+        "value": "",
+        "required": false
+      },
+      "PAYSTACK_KEY": {
+        "description": "OPTIONAL: Your Paystack secret key (sk_live_... or sk_test_...). Only needed for M-Pesa STK push payments.",
+        "value": "",
+        "required": false
+      }
+    },
+    "appJsonKeywords": [
+      "whatsapp",
+      "bot",
+      "wolfbot",
+      "baileys",
+      "session"
+    ],
+    "createdAt": "2026-03-22T10:48:48.524Z",
+    "active": true,
+    "imageUrl": "https://i.ibb.co/xtNB6tCB/upload-1773083841458-a1d8a149-jpg.png",
+    "pairUrl": "https://pair.xwolf.space"
+  },
+  {
+    "id": "ad53b778-9236-4b12-9d36-627d816d1cf3",
+    "name": "JUNE-X",
+    "description": "Whatsapp bot by Supreme",
+    "repoUrl": "https://github.com/Vinpink2/June-x.git",
+    "tag": "whatsapp",
+    "priceKES": 50,
+    "ramMB": 512,
+    "diskMB": 1024,
+    "mainFile": "index.js",
+    "createdAt": "2026-03-26T12:40:11.060Z",
+    "active": true,
+    "imageUrl": "https://files.catbox.moe/pr5ynj.jpg",
+    "pairUrl": "https://j-p2-96e2148f182f.herokuapp.com/pair",
+    "appJsonUrl": "https://raw.githubusercontent.com/Vinpink2/June-x/main/app.json",
+    "appJsonName": "June-X WhatsApp Bot",
+    "appJsonDescription": "June-X — a feature-rich WhatsApp bot built with Baileys.",
+    "appJsonEnv": {
+      "SESSION_ID": {
+        "description": "Must begin with 'JUNE-MD:~'. Generate it from the bot's pairing flow.",
+        "value": "",
+        "required": true
+      },
+      "OWNER_NUMBER": {
+        "description": "Your WhatsApp number in international format without the + sign (e.g. 2547XXXXXXXX).",
+        "value": "25479021944",
+        "required": false
+      }
+    },
+    "appJsonKeywords": [
+      "whatsapp",
+      "bot",
+      "baileys",
+      "assistant"
+    ]
+  }
+]

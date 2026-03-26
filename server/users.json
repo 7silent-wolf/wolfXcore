@@ -1,0 +1,86 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "britonkiplangat@0gmail.com",
+      "username": "wolf",
+      "firstName": "Wolf",
+      "lastName": "Host",
+      "isAdmin": true,
+      "createdAt": "2026-02-11T12:20:47.000Z"
+    },
+    {
+      "id": 2,
+      "email": "wolfsilent906@gmail.com",
+      "username": "wolfsilent",
+      "firstName": "Wolf",
+      "lastName": "Silent",
+      "isAdmin": false,
+      "createdAt": "2026-02-11T11:31:42.000Z"
+    },
+    {
+      "id": 11,
+      "email": "kip@gmail.com",
+      "username": "kip",
+      "firstName": "Kip",
+      "lastName": "User",
+      "isAdmin": false,
+      "createdAt": "2026-02-11T11:34:37.000Z"
+    },
+    {
+      "id": 45,
+      "email": "your@gmail.com",
+      "username": "f3d75f90163a48e",
+      "firstName": "User",
+      "lastName": "45",
+      "isAdmin": false,
+      "createdAt": "2026-02-26T21:52:38.000Z"
+    },
+    {
+      "id": 163,
+      "email": "britonkiplangat777@gmail.com",
+      "username": "briton777",
+      "firstName": "Briton",
+      "lastName": "777",
+      "isAdmin": false,
+      "createdAt": "2026-02-17T10:47:00.000Z"
+    },
+    {
+      "id": 164,
+      "email": "kingmasha89@gmail.com",
+      "username": "kingmasha89",
+      "firstName": "King",
+      "lastName": "Masha",
+      "isAdmin": false,
+      "createdAt": "2026-02-15T08:48:59.000Z"
+    },
+    {
+      "id": 165,
+      "email": "onesmarch3@gmail.com",
+      "username": "onesmarch3",
+      "firstName": "Ones",
+      "lastName": "March",
+      "isAdmin": false,
+      "createdAt": "2026-02-18T10:21:57.000Z"
+    },
+    {
+      "id": 166,
+      "email": "test1@test.com",
+      "username": "test1",
+      "firstName": "Test",
+      "lastName": "User",
+      "isAdmin": false,
+      "createdAt": "2026-02-19T22:50:56.000Z"
+    },
+    {
+      "id": 167,
+      "email": "silent@xwolf.space",
+      "username": "silent",
+      "firstName": "Silent",
+      "lastName": "Wolf",
+      "isAdmin": false,
+      "createdAt": "2026-02-23T19:46:54.000Z"
+    }
+  ],
+  "nextId": 200
+}

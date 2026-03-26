@@ -1,0 +1,56 @@
+json
+root@silentwolf:/var/www/wolfhost# tail -f /var/log/nginx/error.log
+2026/03/10 00:03:20 [error] 3614390#3614390: *205634 connect() failed (111: Conn
+ection refused) while connecting to upstream, client: 3.82.250.167, server: apis
+.xwolf.space, request: "GET /download/mp4?url=joeboy%20new%20song%20snippet%20ti
+ktok%20viral%202026 HTTP/1.1", upstream: "http://[::1]:5000/download/mp4?url=joe
+boy%20new%20song%20snippet%20tiktok%20viral%202026", host: "apis.xwolf.space"
+2026/03/10 00:03:33 [error] 3614391#3614391: *205572 connect() failed (111: Conn
+ection refused) while connecting to upstream, client: 41.90.184.80, server: host
+.xwolf.space, request: "GET /api/transactions/totals?email=silent%40xwolf.space
+HTTP/2.0", upstream: "http://[::1]:4000/api/transactions/totals?email=silent%40x
+wolf.space", host: "host.xwolf.space", referrer: "https://host.xwolf.space/serve
+rs"
+2026/03/10 00:04:03 [error] 3614391#3614391: *205572 connect() failed (111: Conn
+ection refused) while connecting to upstream, client: 41.90.184.80, server: host
+.xwolf.space, request: "GET /api/notifications?userId=1 HTTP/2.0", upstream: "ht
+tp://[::1]:4000/api/notifications?userId=1", host: "host.xwolf.space", referrer:
+ "https://host.xwolf.space/servers"
+2026/03/10 00:04:33 [error] 3614391#3614391: *205572 connect() failed (111: Conn
+ection refused) while connecting to upstream, client: 41.90.184.80, server: host
+.xwolf.space, request: "GET /api/notifications?userId=1 HTTP/2.0", upstream: "ht
+tp://[::1]:4000/api/notifications?userId=1", host: "host.xwolf.space", referrer:
+ "https://host.xwolf.space/servers"
+2026/03/10 00:05:33 [error] 3614391#3614391: *205572 connect() failed (111: Conn
+ection refused) while connecting to upstream, client: 41.90.184.80, server: host
+.xwolf.space, request: "GET /api/transactions/totals?email=silent%40xwolf.space
+HTTP/2.0", upstream: "http://[::1]:4000/api/transactions/totals?email=silent%40x
+wolf.space", host: "host.xwolf.space", referrer: "https://host.xwolf.space/serve
+rs"
+2026/03/10 00:06:59 [error] 3614391#3614391: *205572 connect() failed (111: Conn
+ection refused) while connecting to upstream, client: 41.90.184.80, server: host
+.xwolf.space, request: "GET /api/notifications?userId=1 HTTP/2.0", upstream: "ht
+tp://[::1]:4000/api/notifications?userId=1", host: "host.xwolf.space", referrer:
+ "https://host.xwolf.space/servers"
+2026/03/10 00:08:14 [error] 3614391#3614391: *205572 connect() failed (111: Conn
+ection refused) while connecting to upstream, client: 41.90.184.80, server: host
+.xwolf.space, request: "GET /api/transactions/totals?email=silent%40xwolf.space
+HTTP/2.0", upstream: "http://[::1]:4000/api/transactions/totals?email=silent%40x
+wolf.space", host: "host.xwolf.space", referrer: "https://host.xwolf.space/serve
+rs"
+2026/03/10 00:08:48 [error] 3614391#3614391: *205572 connect() failed (111: Conn
+ection refused) while connecting to upstream, client: 41.90.184.80, server: host
+.xwolf.space, request: "GET /api/notifications?userId=1 HTTP/2.0", upstream: "ht
+tp://[::1]:4000/api/notifications?userId=1", host: "host.xwolf.space", referrer:
+ "https://host.xwolf.space/servers"
+2026/03/10 00:09:18 [error] 3614391#3614391: *205572 connect() failed (111: Conn
+ection refused) while connecting to upstream, client: 41.90.184.80, server: host
+.xwolf.space, request: "GET /api/notifications?userId=1 HTTP/2.0", upstream: "ht
+tp://[::1]:4000/api/notifications?userId=1", host: "host.xwolf.space", referrer:
+ "https://host.xwolf.space/servers"
+2026/03/10 00:10:59 [error] 3614391#3614391: *205572 connect() failed (111: Conn
+ection refused) while connecting to upstream, client: 41.90.184.80, server: host
+.xwolf.space, request: "GET /api/transactions/totals?email=silent%40xwolf.space
+HTTP/2.0", upstream: "http://[::1]:4000/api/transactions/totals?email=silent%40x
+wolf.space", host: "host.xwolf.space", referrer: "https://host.xwolf.space/serve
+rs"

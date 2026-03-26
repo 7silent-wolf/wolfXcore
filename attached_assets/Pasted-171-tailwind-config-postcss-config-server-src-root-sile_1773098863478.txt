@@ -1,0 +1,31 @@
+171:    'tailwind.config', 'postcss.config', 'server/', 'src/'];
+root@silentwolf:/var/www/wolfhost# sed -i "s/'tailwind.config', 'postcss.config', 'server\/', 'src\/'/'tailwind.config', 'postcss.confi
+g', 'src\//g" /var/www/wolfhost/server/index.js
+root@silentwolf:/var/www/wolfhost# sed -i "s/if (blocked.some(p => lp.includes(p))) {/const isBlocked = blocked.some(p => lp.includes(p
+)) || lp.startsWith('\/server\/');\n  if (isBlocked) {/" /var/www/wolfhost/server/index.js
+root@silentwolf:/var/www/wolfhost# pm2 restart wolfhost && sleep 3 && curl -s http://127.0.0.1:4000/api/free-server/status -H "Authoriz
+ation: Bearer test"
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [wolfhost](ids: [ 0 ])
+[PM2] [wolfhost](0) ✓
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬─────
+─────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watc
+hing │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼─────
+─────┤
+│ 7  │ pairwolf        │ default     │ 1.0.0   │ fork    │ 1815748  │ 2D     │ 0    │ online    │ 0%       │ 28.2mb   │ root     │ disa
+bled │
+│ 8  │ wolfapis        │ default     │ N/A     │ fork    │ 1859288  │ 2D     │ 0    │ online    │ 0%       │ 9.7mb    │ root     │ disa
+bled │
+│ 0  │ wolfhost        │ default     │ 0.0.0   │ fork    │ 3631874  │ 0s     │ 22   │ online    │ 0%       │ 30.7mb   │ root     │ disa
+bled │
+│ 6  │ wolfmusicapi    │ default     │ 1.0.0   │ fork    │ 3554403  │ 5h     │ 4    │ online    │ 0%       │ 38.3mb   │ root     │ disa
+bled │
+│ 12 │ wolftech        │ default     │ N/A     │ fork    │ 3623388  │ 50m    │ 0    │ online    │ 0%       │ 24.4mb   │ root     │ disa
+bled │
+│ 2  │ xwolfsec        │ default     │ 0.0.0   │ fork    │ 1751166  │ 2D     │ 2    │ online    │ 0%       │ 80.9mb   │ root     │ disa
+bled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴─────
+─────┘
+{"message":"Not found"}root@silentwolf:/var/www/wolfhost#

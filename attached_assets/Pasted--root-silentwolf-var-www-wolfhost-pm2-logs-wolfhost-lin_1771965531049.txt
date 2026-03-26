@@ -1,0 +1,217 @@
+────────┘
+root@silentwolf:/var/www/wolfhost# pm2 logs wolfhost --lines 80
+[TAILING] Tailing last 80 lines for [wolfhost] process (change the val
+ue with --lines option)
+/root/.pm2/logs/wolfhost-error.log last 80 lines:
+/root/.pm2/logs/wolfhost-out.log last 80 lines:
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | Startup: Fetching Pterodactyl egg variables...
+12|wolfhos | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","U
+SER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKEN","U
+NNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+12|wolfhos | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANC
+H":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USERNAME
+":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NO
+DE_ARGS":""}
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | Startup: Fetching Pterodactyl egg variables...
+12|wolfhos | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","U
+SER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKEN","U
+NNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+12|wolfhos | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANC
+H":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USERNAME
+":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NO
+DE_ARGS":""}
+12|wolfhos | Startup: Egg startup: FROM EGG
+12|wolfhos | Startup: Egg docker image: ghcr.io/pelican-eggs/yolks:nod
+ejs_24
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | Startup: Fetching Pterodactyl egg variables...
+12|wolfhos | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","U
+SER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKEN","U
+NNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+12|wolfhos | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANC
+H":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USERNAME
+":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NO
+DE_ARGS":""}
+12|wolfhos | Startup: Egg startup: FROM EGG
+12|wolfhos | Startup: Egg docker image: ghcr.io/pelican-eggs/yolks:nod
+ejs_24
+
+^C
+root@silentwolf:/var/www/wolfhost# ^C
+root@silentwolf:/var/www/wolfhost# ^C
+root@silentwolf:/var/www/wolfhost# cd /var/www/wolfhost && git pull &&
+ npx vite build && pm2 restart wolfhost
+remote: Enumerating objects: 10, done.
+remote: Counting objects: 100% (10/10), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 6 (delta 4), reused 6 (delta 4), pack-reused 0 (from 0)
+Unpacking objects: 100% (6/6), 1.38 KiB | 141.00 KiB/s, done.
+From https://github.com/nk-apex/wolfhost
+   db5756a..b61dbc7  main       -> origin/main
+Updating db5756a..b61dbc7
+Fast-forward
+ ...t-pm2-logs-wolfhost-lin_1771964703748.txt | 57 ++++++++++++++++++
+ server/index.js                              |  2 +-
+ 2 files changed, 58 insertions(+), 1 deletion(-)
+ create mode 100644 attached_assets/Pasted--root-silentwolf-var-www-wo
+lfhost-pm2-logs-wolfhost-lin_1771964703748.txt
+NODE_ENV=production is not supported in the .env file. Only NODE_ENV=d
+evelopment is supported to create a development build of your project.
+ If you need to set process.env.NODE_ENV, you can set it in the Vite c
+onfig instead.
+vite v5.4.21 building for production...
+✓ 2082 modules transformed.
+dist/assets/C190GLew.woff2    4.23 kB
+dist/assets/JpySY46c.woff2    4.28 kB
+dist/assets/C6CZE3T8.woff2    4.30 kB
+dist/index.html               4.40 kB │ gzip:   1.51 kB
+dist/assets/BEIGL1Tu.woff2    5.33 kB
+dist/assets/BWTpRfYl.woff2    5.34 kB
+dist/assets/DmUKJPL_.woff2    5.36 kB
+dist/assets/CqNFfHCs.woff     5.37 kB
+dist/assets/BDLVIk2r.woff     5.45 kB
+dist/assets/DNRqzVM1.woff     5.48 kB
+dist/assets/B9oWc5Lo.woff     5.66 kB
+dist/assets/DEigVDxa.woff     5.70 kB
+dist/assets/D7SFKleX.woff     5.72 kB
+dist/assets/U6xZUhur.woff2    6.40 kB
+dist/assets/DrIi7unX.woff2    6.40 kB
+dist/assets/4jsRXGGJ.woff2    6.53 kB
+dist/assets/ugxPyKxw.woff     6.98 kB
+dist/assets/CEoEElIJ.woff     7.02 kB
+dist/assets/DJqRU3vO.woff     7.02 kB
+dist/assets/Bc8Ftmh3.woff2    7.34 kB
+dist/assets/CZipNAKV.woff2    7.47 kB
+dist/assets/Cut-4mMH.woff2    7.53 kB
+dist/assets/BbJatbhp.woff     8.40 kB
+dist/assets/DBk4Dmer.woff     8.66 kB
+dist/assets/DmYOh-W9.woff     8.97 kB
+dist/assets/fXTG6kC5.woff    10.13 kB
+dist/assets/CxPITLHs.woff    10.30 kB
+dist/assets/ckzbgY84.woff    10.34 kB
+dist/assets/V6pRDFza.woff2   21.17 kB
+dist/assets/BWZEU5yA.woff2   21.83 kB
+dist/assets/BYuf6tUa.woff2   21.91 kB
+dist/assets/6-qcROiO.woff    27.50 kB
+dist/assets/CJOVTJB7.woff    28.21 kB
+dist/assets/D3wTyLJW.woff    28.21 kB
+dist/assets/DXCb7GLD.css    123.62 kB │ gzip:  36.53 kB
+dist/assets/CdGk2OCe.js     677.80 kB │ gzip: 187.58 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: htt
+ps://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningL
+imit.
+✓ built in 18.46s
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [wolfhost](ids: [ 12 ])
+[PM2] [wolfhost](12) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──
+────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ m
+emory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──
+────────┤
+│ 2  │ pairwolf           │ fork     │ 5    │ online    │ 0%       │ 6
+6.5mb   │
+│ 10 │ wolfdeploy         │ fork     │ 66   │ online    │ 0%       │ 6
+7.6mb   │
+│ 12 │ wolfhost           │ fork     │ 6    │ online    │ 0%       │ 3
+1.8mb   │
+│ 7  │ wolfhost-backend   │ fork     │ 2    │ online    │ 0%       │ 5
+7.8mb   │
+│ 8  │ wolfhost-frontend  │ fork     │ 0    │ online    │ 0%       │ 5
+8.0mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──
+────────┘
+root@silentwolf:/var/www/wolfhost# pm2 logs wolfhost --lines 80
+[TAILING] Tailing last 80 lines for [wolfhost] process (change the val
+ue with --lines option)
+/root/.pm2/logs/wolfhost-error.log last 80 lines:
+/root/.pm2/logs/wolfhost-out.log last 80 lines:
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | Startup: Fetching Pterodactyl egg variables...
+12|wolfhos | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","U
+SER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKEN","U
+NNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+12|wolfhos | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANC
+H":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USERNAME
+":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NO
+DE_ARGS":""}
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | Startup: Fetching Pterodactyl egg variables...
+12|wolfhos | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","U
+SER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKEN","U
+NNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+12|wolfhos | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANC
+H":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USERNAME
+":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NO
+DE_ARGS":""}
+12|wolfhos | Startup: Egg startup: FROM EGG
+12|wolfhos | Startup: Egg docker image: ghcr.io/pelican-eggs/yolks:nod
+ejs_24
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | Startup: Fetching Pterodactyl egg variables...
+12|wolfhos | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","U
+SER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKEN","U
+NNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+12|wolfhos | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANC
+H":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USERNAME
+":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NO
+DE_ARGS":""}
+12|wolfhos | Startup: Egg startup: FROM EGG
+12|wolfhos | Startup: Egg docker image: ghcr.io/pelican-eggs/yolks:nod
+ejs_24
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | Startup: Fetching Pterodactyl egg variables...
+12|wolfhos | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","U
+SER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKEN","U
+NNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+12|wolfhos | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANC
+H":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USERNAME
+":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NO
+DE_ARGS":""}
+12|wolfhos | Startup: Egg startup: FROM EGG
+12|wolfhos | Startup: Egg docker image: ghcr.io/pelican-eggs/yolks:nod
+ejs_24

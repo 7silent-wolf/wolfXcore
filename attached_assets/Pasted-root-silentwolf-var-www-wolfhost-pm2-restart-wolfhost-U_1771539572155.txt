@@ -1,0 +1,78 @@
+root@silentwolf:/var/www/wolfhost# pm2 restart wolfhost
+Use --update-env to update environment variables
+[PM2][ERROR] Process or Namespace wolfhost not found
+root@silentwolf:/var/www/wolfhost# cd /var/www/wolfhost
+root@silentwolf:/var/www/wolfhost# npm install terser --save-dev
+
+up to date, audited 713 packages in 5s
+
+186 packages are looking for funding
+  run `npm fund` for details
+
+22 vulnerabilities (1 low, 5 moderate, 16 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+root@silentwolf:/var/www/wolfhost# npm run build
+
+> vite_react_shadcn_ts@0.0.0 build
+> vite build
+
+NODE_ENV=production is not supported in the .env file. Only NODE_ENV=development is supported
+to create a development build of your project. If you need to set process.env.NODE_ENV, you ca
+n set it in the Vite config instead.
+vite v5.4.19 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 8 months old. Pleas
+e run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2082 modules transformed.
+dist/assets/C190GLew.woff2    4.23 kB
+dist/assets/JpySY46c.woff2    4.28 kB
+dist/assets/C6CZE3T8.woff2    4.30 kB
+dist/index.html               4.40 kB │ gzip:   1.51 kB
+dist/assets/BEIGL1Tu.woff2    5.33 kB
+dist/assets/BWTpRfYl.woff2    5.34 kB
+dist/assets/DmUKJPL_.woff2    5.36 kB
+dist/assets/CqNFfHCs.woff     5.37 kB
+dist/assets/BDLVIk2r.woff     5.45 kB
+dist/assets/DNRqzVM1.woff     5.48 kB
+dist/assets/B9oWc5Lo.woff     5.66 kB
+dist/assets/DEigVDxa.woff     5.70 kB
+dist/assets/D7SFKleX.woff     5.72 kB
+dist/assets/U6xZUhur.woff2    6.40 kB
+dist/assets/DrIi7unX.woff2    6.40 kB
+dist/assets/4jsRXGGJ.woff2    6.53 kB
+dist/assets/ugxPyKxw.woff     6.98 kB
+dist/assets/CEoEElIJ.woff     7.02 kB
+dist/assets/DJqRU3vO.woff     7.02 kB
+dist/assets/Bc8Ftmh3.woff2    7.34 kB
+dist/assets/CZipNAKV.woff2    7.47 kB
+dist/assets/Cut-4mMH.woff2    7.53 kB
+dist/assets/BbJatbhp.woff     8.40 kB
+dist/assets/DBk4Dmer.woff     8.66 kB
+dist/assets/DmYOh-W9.woff     8.97 kB
+dist/assets/fXTG6kC5.woff    10.13 kB
+dist/assets/CxPITLHs.woff    10.30 kB
+dist/assets/ckzbgY84.woff    10.34 kB
+dist/assets/V6pRDFza.woff2   21.17 kB
+dist/assets/BWZEU5yA.woff2   21.83 kB
+dist/assets/BYuf6tUa.woff2   21.91 kB
+dist/assets/6-qcROiO.woff    27.50 kB
+dist/assets/CJOVTJB7.woff    28.21 kB
+dist/assets/D3wTyLJW.woff    28.21 kB
+dist/assets/CNvWYwAI.css    123.94 kB │ gzip:  36.54 kB
+dist/assets/DNuNpFcP.js     677.52 kB │ gzip: 187.53 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/config
+uration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 19.52s
+root@silentwolf:/var/www/wolfhost#

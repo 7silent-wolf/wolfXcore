@@ -1,0 +1,137 @@
+You are a senior cybersecurity engineer and full-stack security expert.
+
+Audit my entire project and upgrade it to enterprise-grade security. This is a production hosting site where users purchase panels, so security must be extremely strict.
+
+Apply the following security upgrades without breaking functionality:
+
+🔐 1. Authentication & Authorization
+
+Enforce strict role-based access control (RBAC)
+
+Ensure admin routes are server-verified (not frontend-based)
+
+Prevent privilege escalation
+
+Protect against IDOR (Insecure Direct Object Reference)
+
+Add proper session validation
+
+Expire sessions securely
+
+Regenerate session tokens on login
+
+🛡 2. Backend Security
+
+Validate and sanitize all user inputs (server-side)
+
+Add rate limiting to all sensitive routes (login, register, payment, panel creation)
+
+Protect against:
+
+SQL Injection
+
+NoSQL Injection
+
+XSS
+
+CSRF
+
+Command injection
+
+Disable stack trace exposure in production
+
+Hide internal error details from users
+
+🔒 3. Payment & Panel Purchase Security
+
+Verify payments server-side only
+
+Prevent manual request manipulation
+
+Prevent replay attacks
+
+Ensure panel creation only happens after verified payment confirmation
+
+Log all purchase actions
+
+🚫 4. Anti-Bypass & Anti-Exploit
+
+Prevent API abuse
+
+Block direct access to internal routes
+
+Protect against brute force login attempts
+
+Add IP throttling
+
+Implement bot protection logic
+
+Add request integrity checks
+
+🧱 5. Infrastructure Hardening
+
+Use environment variables securely
+
+Ensure secrets are never exposed in frontend
+
+Add secure HTTP headers (CSP, HSTS, X-Frame-Options, etc.)
+
+Enable strict CORS configuration
+
+Force HTTPS
+
+📊 6. Monitoring & Logging
+
+Log suspicious behavior
+
+Log failed login attempts
+
+Log admin activity
+
+Add basic intrusion detection logic
+
+🚨 7. Code Cleanup
+
+Remove insecure patterns
+
+Remove unused endpoints
+
+Ensure production mode settings
+
+Optimize security without reducing performance
+
+After auditing:
+
+List vulnerabilities found
+
+Show exact code changes
+
+Implement fixes directly
+
+Explain what was improved
+
+The goal is MAXIMUM SECURITY against hackers, bypassers, token manipulators, payment spoofers, and panel exploiters.
+
+Treat this as a real fintech-level application.
+
+🔥 EXTRA (Even More Powerful Version)
+
+If you want it even more aggressive, add this at the bottom:
+
+Assume attackers will:
+
+Modify frontend JavaScript
+
+Intercept API calls
+
+Use Postman to forge requests
+
+Inspect network traffic
+
+Attempt role escalation
+
+Reverse engineer logic
+
+Try brute force and bot attacks
+
+Secure the system against all of these.

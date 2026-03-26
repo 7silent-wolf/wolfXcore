@@ -1,0 +1,76 @@
+root@silentwolf:/var/www/wolfhost#
+root@silentwolf:/var/www/wolfhost# nginx -t 2>&1 && grep -r "proxy_pas
+s\|upstream\|server_name" /etc/nginx/ 2>/dev/null | head -20
+2026/02/24 21:51:45 [warn] 149212#149212: the "listen ... http2" direc
+tive is deprecated, use the "http2" directive instead in /etc/nginx/si
+tes-enabled/20-default.conf:14
+2026/02/24 21:51:45 [warn] 149212#149212: the "listen ... http2" direc
+tive is deprecated, use the "http2" directive instead in /etc/nginx/si
+tes-enabled/20-default.conf:15
+2026/02/24 21:51:45 [warn] 149212#149212: protocol options redefined f
+or [::]:443 in /etc/nginx/sites-enabled/20-default.conf:15
+2026/02/24 21:51:45 [warn] 149212#149212: the "listen ... http2" direc
+tive is deprecated, use the "http2" directive instead in /etc/nginx/si
+tes-enabled/wolfdeploy.conf:21
+2026/02/24 21:51:45 [warn] 149212#149212: protocol options redefined f
+or 0.0.0.0:443 in /etc/nginx/sites-enabled/wolfdeploy.conf:21
+2026/02/24 21:51:45 [warn] 149212#149212: the "listen ... http2" direc
+tive is deprecated, use the "http2" directive instead in /etc/nginx/si
+tes-enabled/wolfdeploy.conf:22
+2026/02/24 21:51:45 [warn] 149212#149212: protocol options redefined f
+or [::]:443 in /etc/nginx/sites-enabled/wolfdeploy.conf:22
+2026/02/24 21:51:45 [warn] 149212#149212: the "listen ... http2" direc
+tive is deprecated, use the "http2" directive instead in /etc/nginx/si
+tes-enabled/wolfhost.conf:14
+2026/02/24 21:51:45 [warn] 149212#149212: the "listen ... http2" direc
+tive is deprecated, use the "http2" directive instead in /etc/nginx/si
+tes-enabled/wolfhost.conf:15
+2026/02/24 21:51:45 [warn] 149212#149212: conflicting server name "pan
+el.xwolf.space" on [::]:443, ignored
+2026/02/24 21:51:45 [warn] 149212#149212: conflicting server name "pan
+el.xwolf.space" on 0.0.0.0:443, ignored
+2026/02/24 21:51:45 [warn] 149212#149212: conflicting server name "pan
+el.xwolf.space" on 0.0.0.0:80, ignored
+2026/02/24 21:51:45 [warn] 149212#149212: conflicting server name "pan
+el.xwolf.space" on [::]:80, ignored
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+/etc/nginx/fastcgi_params:fastcgi_param  SERVER_NAME        $server_na
+me;
+/etc/nginx/fastcgi.conf:fastcgi_param  SERVER_NAME        $server_name
+;
+/etc/nginx/uwsgi_params:uwsgi_param  SERVER_NAME        $server_name;
+/etc/nginx/sites-available/wolfhost.confy:    server_name host.xwolf.s
+pace;
+/etc/nginx/sites-available/wolfhost.confy:        proxy_pass http://lo
+calhost:4000/;
+/etc/nginx/sites-available/wolfhost.confy:        proxy_pass http://lo
+calhost:3000;
+/etc/nginx/sites-available/pterodactyl.conf:    server_name panel.xwol
+f.space;
+/etc/nginx/sites-available/pterodactyl.conf:    server_name panel.xwol
+f.space;
+/etc/nginx/sites-available/wolfhost.conf:    server_name host.xwolf.sp
+ace;
+/etc/nginx/sites-available/wolfhost.conf:    server_name host.xwolf.sp
+ace;
+/etc/nginx/sites-available/wolfhost.conf:        proxy_pass http://loc
+alhost:4000;
+/etc/nginx/sites-available/default.backup:      server_name _;
+/etc/nginx/sites-available/default.backup:    proxy_pass http://localh
+ost:3000;  # Your PM2 app port
+/etc/nginx/sites-available/default.backup:#     server_name example.co
+m;
+/etc/nginx/sites-available/default.backup:    server_name node.xwolf.s
+pace pair.xwolf.space panel.xwolf.space; # managed by Certbot
+/etc/nginx/sites-available/default.backup:    server_name node.xwolf.s
+pace pair.xwolf.space panel.xwolf.space;
+/etc/nginx/sites-available/default:    server_name node.xwolf.space  p
+anel.xwolf.space;
+/etc/nginx/sites-available/default:    server_name node.xwolf.space pa
+ir.xwolf.space panel.xwolf.space;
+/etc/nginx/sites-available/default:        proxy_pass http://localhost
+:5000;
+/etc/nginx/sites-available/wolfdeploy.conf:    server_name deploy.xwol
+f.space;
+root@silentwolf:/var/www/wolfhost#

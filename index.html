@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- App Title -->
+    <title>WolfHost</title>
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://i.ibb.co/4g7rWmss/Chat-GPT-Image-Jan-28-2026-10-30-54-AM.png"
+    />
+
+    <!-- Optional: Apple Touch Icon -->
+    <link
+      rel="apple-touch-icon"
+      href="https://i.ibb.co/4g7rWmss/Chat-GPT-Image-Jan-28-2026-10-30-54-AM.png"
+    />
+
+    <!-- SEO -->
+    <meta name="description" content="WolfHost – Powerful, fast, and secure hosting solutions." />
+    <meta name="author" content="WolfHost" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="WolfHost" />
+    <meta property="og:description" content="Powerful, fast, and secure hosting solutions." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/image.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="WolfHost" />
+    <meta name="twitter:description" content="Powerful, fast, and secure hosting solutions." />
+    <meta name="twitter:image" content="/image.png" />
+
+    <script>
+      (function(){
+        var h=window.location.hostname;
+        if(h==='localhost'||h==='127.0.0.1')return;
+
+        var _n=function(){};
+        var _c={log:_n,warn:_n,error:_n,info:_n,debug:_n,trace:_n,dir:_n,dirxml:_n,group:_n,groupEnd:_n,time:_n,timeEnd:_n,assert:_n,profile:_n,profileEnd:_n,table:_n,clear:_n,count:_n,countReset:_n,groupCollapsed:_n};
+        try{Object.defineProperty(window,'console',{get:function(){return _c},set:_n,configurable:false})}catch(e){}
+        try{window.console=_c}catch(e){}
+
+        document.addEventListener('contextmenu',function(e){e.preventDefault()});
+        document.addEventListener('keydown',function(e){
+          if(e.key==='F12'){e.preventDefault();e.stopPropagation();return false}
+          if(e.ctrlKey&&e.shiftKey&&/^[IJCijc]$/.test(e.key)){e.preventDefault();e.stopPropagation();return false}
+          if(e.ctrlKey&&/^[Uu]$/.test(e.key)){e.preventDefault();e.stopPropagation();return false}
+          if(e.metaKey&&e.altKey&&/^[IJij]$/.test(e.key)){e.preventDefault();e.stopPropagation();return false}
+          if(e.metaKey&&/^[Uu]$/.test(e.key)){e.preventDefault();e.stopPropagation();return false}
+        },true);
+
+        var _dt=170;
+        var _chk=function(){
+          var s=performance.now();
+          (function(){}).constructor('debugger')();
+          if(performance.now()-s>_dt){
+            document.body.innerHTML='<div style="background:#000;color:#0f0;height:100vh;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:2em">Access Denied</div>';
+            window.location.replace('about:blank');
+          }
+        };
+        setInterval(_chk,3000);
+
+        var _el=document.createElement('div');
+        Object.defineProperty(_el,'id',{get:function(){
+          document.body.innerHTML='';window.location.replace('about:blank');
+        }});
+
+        try{
+          Object.defineProperty(window,'__REACT_DEVTOOLS_GLOBAL_HOOK__',{get:function(){return undefined},set:_n,configurable:false});
+        }catch(e){}
+
+        var _origToString=Function.prototype.toString;
+        try{
+          Function.prototype.toString=function(){
+            if(this===_chk||this===_n)return'function(){}';
+            return _origToString.call(this);
+          };
+          Object.defineProperty(Function.prototype.toString,'toString',{value:function(){return'function toString() { [native code] }'}});
+        }catch(e){}
+
+        document.addEventListener('selectstart',function(e){
+          if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'&&!e.target.isContentEditable){e.preventDefault()}
+        });
+
+        document.addEventListener('copy',function(e){
+          var t=e.target;
+          if(t.tagName!=='INPUT'&&t.tagName!=='TEXTAREA'&&!t.isContentEditable){e.preventDefault()}
+        });
+
+        document.addEventListener('dragstart',function(e){e.preventDefault()});
+      })();
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

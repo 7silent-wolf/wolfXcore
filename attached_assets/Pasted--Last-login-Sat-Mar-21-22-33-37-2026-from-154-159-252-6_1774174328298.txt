@@ -1,0 +1,33 @@
+
+Last login: Sat Mar 21 22:33:37 2026 from 154.159.252.69
+root@silentwolf:~# free -h
+               total        used        free      shared  buff/cache   available
+Mem:           7.8Gi       1.5Gi       3.3Gi        44Mi       3.3Gi       6.2Gi
+Swap:           19Gi       278Mi        19Gi
+root@silentwolf:~# df -h / && df -h /var/lib/pterodactyl
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       148G  101G   42G  71% /
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       148G  101G   42G  71% /
+root@silentwolf:~# du -sh /var/lib/pterodactyl/volumes/* 2>/dev/null | sort -rh | head -20
+2.7G    /var/lib/pterodactyl/volumes/10d53f70-494a-43c2-bb44-fcbe4769af3a
+1.7G    /var/lib/pterodactyl/volumes/d3b4eeb7-e054-491f-a89e-297621ea9491
+1.5G    /var/lib/pterodactyl/volumes/edb5252e-1a6e-4a15-a565-19e218d67a86
+1.4G    /var/lib/pterodactyl/volumes/5afe80fd-7d4f-4d92-80f9-32f178f88ab8
+1.4G    /var/lib/pterodactyl/volumes/4b39950a-e4f5-409a-b01f-8096a9c8daff
+1.2G    /var/lib/pterodactyl/volumes/d0b81024-546d-4378-b198-e8ba61766413
+1.2G    /var/lib/pterodactyl/volumes/b1d296ff-b97a-4a83-89b9-47eb65e48341
+1.2G    /var/lib/pterodactyl/volumes/a497f75f-32f7-4367-ba8d-7d2f3bbb19ee
+1.2G    /var/lib/pterodactyl/volumes/8c7ff13e-f9e0-4490-bc4f-d8fe182f4aa0
+1.2G    /var/lib/pterodactyl/volumes/857c1124-fba9-425d-bc69-cb29ca58d9e8
+1.2G    /var/lib/pterodactyl/volumes/7ac41768-7d2b-4790-baea-85f32e6e2638
+1.2G    /var/lib/pterodactyl/volumes/66b91135-6075-4ec4-8221-de4b59b9a4af
+1.2G    /var/lib/pterodactyl/volumes/65bfe6be-0077-4d60-b8e8-194cb384a943
+1.2G    /var/lib/pterodactyl/volumes/64e8462f-918a-479e-95f9-fedfc60679db
+1.2G    /var/lib/pterodactyl/volumes/5a40a899-47b2-4963-a730-e678e2c43e5b
+1000M   /var/lib/pterodactyl/volumes/d61fc87e-efcb-4983-8fe9-9b03057bf59a
+961M    /var/lib/pterodactyl/volumes/b3f83aee-0ba0-44d7-a2d2-a263eb904d3b
+942M    /var/lib/pterodactyl/volumes/ec38a961-494e-4aec-86ce-b24420e8dac9
+885M    /var/lib/pterodactyl/volumes/9bb3b4e8-7838-438f-9c33-786473d03381
+884M    /var/lib/pterodactyl/volumes/6f2e332b-4b67-4378-bef2-5191f81f8510
+root@silentwolf:~#

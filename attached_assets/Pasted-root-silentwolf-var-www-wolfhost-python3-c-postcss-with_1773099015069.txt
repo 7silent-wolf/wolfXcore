@@ -1,0 +1,36 @@
+root@silentwolf:/var/www/wolfhost# python3 -c "
+'postcss> with open('/var/www/wolfhost/server/index.js', 'r') as f:
+>     c = f.read()
+> c = c.replace(\"'postcss.config', 'src/];\", \"'postcss.config', 'src/'];\")
+> with open('/var/www/wolfhost/server/index.js', 'w') as f:
+>     f.write(c)
+> print('Fixed')
+> "
+Fixed
+root@silentwolf:/var/www/wolfhost# node --check /var/www/wolfhost/server/index.js && echo "Syntax OK" && pm2 restart wolfhost && sleep
+3 && curl -s http://127.0.0.1:4000/api/free-server/status -H "Authorization: Bearer test"
+Syntax OK
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [wolfhost](ids: [ 0 ])
+[PM2] [wolfhost](0) ✓
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬─────
+─────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watc
+hing │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼─────
+─────┤
+│ 7  │ pairwolf        │ default     │ 1.0.0   │ fork    │ 1815748  │ 2D     │ 0    │ online    │ 4.8%     │ 28.0mb   │ root     │ disa
+bled │
+│ 8  │ wolfapis        │ default     │ N/A     │ fork    │ 1859288  │ 2D     │ 0    │ online    │ 0%       │ 9.7mb    │ root     │ disa
+bled │
+│ 0  │ wolfhost        │ default     │ 0.0.0   │ fork    │ 3632045  │ 0s     │ 23   │ online    │ 0%       │ 18.8mb   │ root     │ disa
+bled │
+│ 6  │ wolfmusicapi    │ default     │ 1.0.0   │ fork    │ 3554403  │ 5h     │ 4    │ online    │ 0%       │ 38.3mb   │ root     │ disa
+bled │
+│ 12 │ wolftech        │ default     │ N/A     │ fork    │ 3623388  │ 52m    │ 0    │ online    │ 0%       │ 23.6mb   │ root     │ disa
+bled │
+│ 2  │ xwolfsec        │ default     │ 0.0.0   │ fork    │ 1751166  │ 2D     │ 2    │ online    │ 0%       │ 80.8mb   │ root     │ disa
+bled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴─────
+─────┘
+{"message":"Not found"}root@silentwolf:/var/www/wolfhost#

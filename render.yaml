@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: wolfhost
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:render
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: APP_URL
+        value: https://wolfhost.onrender.com

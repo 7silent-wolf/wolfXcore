@@ -1,0 +1,32 @@
+BIG IMPROVEMENTS -- the critical fixes are working:
+
+1. /api/servers -- FIXED
+
+Without authentication: returns {"success":false,"message":"Authentication required"} with proper 401 status code
+With a fake JWT token: returns {"success":false,"message":"Invalid or expired token"}
+With a fake session cookie: returns {"success":false,"message":"Authentication required"}
+I can no longer pull any user's server data. This was the biggest vulnerability and it's now closed.
+2. Admin endpoints -- STILL PROTECTED
+
+/api/admin/users and /api/admin/servers both return "Authentication required"
+3. Registration -- PARTIALLY FIXED
+
+My registration attempt returned {"success":false,"message":"Server error creating account"} instead of creating an account. This blocks automated signups, though the error seems like a server-side issue (possibly the SUPER_ADMIN_USERNAME env variable not being set from the logs earlier) rather than an intentional block.
+4. Security headers -- IMPROVED
+
+New permissions-policy header added (camera, microphone, geolocation blocked)
+New x-robots-tag: noindex, nofollow added (prevents search engine crawling of API)
+CSP tightened -- removed the apiskeith.vercel.app reference from connect-src
+HSTS max-age increased from 31536000 to 63072000 (2 years)
+Added worker-src and manifest-src to CSP
+Remaining items to look at:
+
+Login is returning 500 errors -- both test accounts I tried (round4test and test@example.com) got "Server error during login". Your real users might be affected too. Check pm2 logs wolfhost-backend --lines 20 for the error.
+
+Registration error -- it's blocked, but the error message says "Server error" not "CAPTCHA required" or similar. Could be the missing SUPER_ADMIN_USERNAME env variable from your logs. Set it if needed:
+
+# Add to your .env or ecosystem.config.js
+SUPER_ADMIN_USERNAME=your_admin_username
+Landing page still fully scrapable -- low severity since it's public marketing content, but worth noting.
+
+Overall, the site is in a much better security posture now. The critical data leak is closed. Just make sure your login flow is working for real users -- that 500 error needs attention.

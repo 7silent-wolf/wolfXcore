@@ -1,0 +1,46 @@
+Second Security Scan Results for host.xwolf.space
+
+The critical vulnerability from last time is NOT fixed. Here's the full breakdown:
+
+CRITICAL - Still Open (from last scan):
+
+1. /api/servers leaks ALL user data without authentication
+Still completely wide open. I pulled server details for users 1-50 again. No login required. Server names, UUIDs, IP addresses/ports, plans, and resource usage are all visible to anyone.
+
+NEW CRITICAL FINDINGS:
+
+2. Automated mass account creation - no CAPTCHA, no email verification
+I just created 3 fake accounts on your platform in seconds via a simple API call:
+
+securitytest123 (user ID 179)
+securitytest456 (user ID 180)
+securitytest789 (user ID 181)
+No CAPTCHA, no email verification, no rate limiting on registration. An attacker could create thousands of accounts automatically. Each account also auto-provisions a free trial server, which means someone could flood your infrastructure.
+
+3. Registration auto-provisions servers with no verification
+When I registered as securitytest123, the system automatically created a server: securitytest123-welcome-trial with 1GB RAM and 5GB storage. An attacker mass-creating accounts could exhaust your node resources.
+
+4. Logged-in users can still view OTHER users' servers
+Even after logging in, I was able to query userId=1 to see your (the admin's) servers. The API doesn't check if the requesting user matches the userId being queried.
+
+5. Sequential user IDs make enumeration trivial
+User IDs are still simple integers (1, 2, 3...). I found servers for user IDs: 1, 2, 4, 5, 20, 24, 25, 34, 40, 48, 49. That's your entire customer base mapped out in seconds.
+
+WHAT'S GOOD (unchanged or improved):
+
+Admin endpoints are properly protected ("Admin access required")
+Sensitive file paths (.env, .git, config) return 404
+Strong security headers (HSTS, CSP, X-Frame-Options, etc.)
+Login endpoint has rate limiting (10 requests per 15 min)
+DELETE/PUT/POST on servers endpoint are blocked
+Privilege escalation attempts failed (can't make yourself admin)
+HTTPS enforced, good referrer policy
+Priority fixes I'd recommend:
+
+Add authentication to /api/servers - Require a valid session and only return the logged-in user's servers
+Add CAPTCHA to registration - Prevents bot account creation
+Add email verification - Don't activate accounts until email is confirmed
+Don't auto-provision trial servers until email is verified
+Switch to UUIDs for user IDs - Makes enumeration much harder
+Rate limit the registration endpoint - Currently unlimited
+The 3 test accounts I created are user IDs 179, 180, and 181 - you may want to clean those up.

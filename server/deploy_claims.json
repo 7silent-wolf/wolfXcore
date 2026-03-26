@@ -1,0 +1,12 @@
+{
+  "1-70": {
+    "userId": 1,
+    "userEmail": "britonkiplangat@0gmail.com",
+    "serverId": 70,
+    "identifier": "3b7c9cb7",
+    "serverName": "wolf-deploy-1771106129058",
+    "plan": "Limited",
+    "gitRepo": "https://github.com/7silent-wolf/silentwolf.git",
+    "deployedAt": "2026-02-14T21:55:29.442Z"
+  }
+}

@@ -1,0 +1,408 @@
+@import '@fontsource/orbitron/400.css';
+@import '@fontsource/orbitron/700.css';
+@import '@fontsource/orbitron/900.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/jetbrains-mono/700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* WolfHost Neon Green Theme */
+    --background: 120 100% 2%;
+    --foreground: 120 100% 50%;
+
+    --card: 120 100% 4%;
+    --card-foreground: 120 100% 50%;
+
+    --popover: 120 100% 3%;
+    --popover-foreground: 120 100% 50%;
+
+    --primary: 120 100% 50%;
+    --primary-foreground: 120 100% 2%;
+
+    --secondary: 120 50% 8%;
+    --secondary-foreground: 120 100% 50%;
+
+    --muted: 120 30% 10%;
+    --muted-foreground: 120 50% 40%;
+
+    --accent: 120 100% 40%;
+    --accent-foreground: 120 100% 2%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 120 100% 20%;
+    --input: 120 50% 15%;
+    --ring: 120 100% 50%;
+
+    --radius: 0.75rem;
+
+    /* Custom neon colors — derived from --primary so they change with the theme */
+    --neon-green: var(--primary);
+    --neon-green-dim: var(--muted-foreground);
+    --neon-glow: 0 0 20px hsl(var(--primary) / 0.5);
+    --glass-bg: var(--primary) / 0.03;
+    --glass-border: var(--primary) / 0.2;
+
+    /* Sidebar */
+    --sidebar-background: 120 100% 3%;
+    --sidebar-foreground: 120 100% 50%;
+    --sidebar-primary: 120 100% 50%;
+    --sidebar-primary-foreground: 120 100% 2%;
+    --sidebar-accent: 120 50% 10%;
+    --sidebar-accent-foreground: 120 100% 50%;
+    --sidebar-border: 120 100% 15%;
+    --sidebar-ring: 120 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+  }
+}
+
+@layer components {
+  /* Glass Card Effect */
+  .glass-card {
+    @apply relative overflow-hidden rounded-xl;
+    background: hsl(var(--glass-bg));
+    border: 1px solid hsl(var(--glass-border));
+    backdrop-filter: blur(12px);
+    box-shadow: 
+      0 0 20px hsl(var(--primary) / 0.1),
+      inset 0 0 20px hsl(var(--primary) / 0.02);
+  }
+
+  .glass-card:hover {
+    border-color: hsl(var(--primary) / 0.4);
+    box-shadow: 
+      0 0 30px hsl(var(--primary) / 0.2),
+      inset 0 0 30px hsl(var(--primary) / 0.03);
+  }
+
+  /* Neon Text Glow */
+  .neon-text {
+    color: hsl(var(--primary));
+    text-shadow: 
+      0 0 5px hsl(var(--primary) / 0.8),
+      0 0 10px hsl(var(--primary) / 0.6),
+      0 0 20px hsl(var(--primary) / 0.4),
+      0 0 40px hsl(var(--primary) / 0.2);
+  }
+
+  /* Neon Border Glow */
+  .neon-border {
+    border: 1px solid hsl(var(--primary));
+    box-shadow: 
+      0 0 5px hsl(var(--primary) / 0.5),
+      0 0 10px hsl(var(--primary) / 0.3),
+      inset 0 0 5px hsl(var(--primary) / 0.1);
+  }
+
+  /* Neon Button */
+  .neon-button {
+    @apply relative px-6 py-3 font-medium rounded-lg transition-all duration-300;
+    font-family: 'Orbitron', sans-serif;
+    background: transparent;
+    border: 2px solid hsl(var(--primary));
+    color: hsl(var(--primary));
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    box-shadow: 
+      0 0 10px hsl(var(--primary) / 0.3),
+      inset 0 0 10px hsl(var(--primary) / 0.1);
+  }
+
+  .neon-button:hover {
+    background: hsl(var(--primary) / 0.1);
+    transform: scale(1.02);
+    box-shadow: 
+      0 0 20px hsl(var(--primary) / 0.5),
+      0 0 40px hsl(var(--primary) / 0.3),
+      inset 0 0 20px hsl(var(--primary) / 0.1);
+  }
+
+  .neon-button:active {
+    transform: scale(0.98);
+  }
+
+  .neon-button-filled {
+    @apply neon-button;
+    background: hsl(var(--primary));
+    color: hsl(var(--background));
+  }
+
+  .neon-button-filled:hover {
+    background: hsl(var(--primary) / 0.9);
+    box-shadow: 
+      0 0 30px hsl(var(--primary) / 0.6),
+      0 0 60px hsl(var(--primary) / 0.4);
+  }
+
+  /* Neon Progress Bar */
+  .neon-progress {
+    @apply relative h-2 rounded-full overflow-hidden;
+    background: hsl(var(--muted));
+    box-shadow: inset 0 0 5px hsl(var(--primary) / 0.2);
+  }
+
+  .neon-progress-bar {
+    @apply h-full rounded-full transition-all duration-500;
+    background: linear-gradient(90deg, hsl(var(--primary) / 0.6), hsl(var(--primary)));
+    box-shadow: 
+      0 0 10px hsl(var(--primary) / 0.5),
+      0 0 20px hsl(var(--primary) / 0.3);
+  }
+
+  /* Neon Input */
+  .neon-input {
+    @apply w-full px-4 py-3 rounded-lg transition-all duration-300;
+    font-family: 'JetBrains Mono', monospace;
+    background: hsl(var(--primary) / 0.03);
+    border: 1px solid hsl(var(--primary) / 0.2);
+    color: hsl(var(--primary));
+  }
+
+  .neon-input::placeholder {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .neon-input:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+    box-shadow: 
+      0 0 10px hsl(var(--primary) / 0.3),
+      inset 0 0 10px hsl(var(--primary) / 0.05);
+  }
+
+  /* Status Indicators */
+  .status-online {
+    @apply relative flex items-center gap-2;
+  }
+
+  .status-online::before {
+    content: '';
+    @apply w-2 h-2 rounded-full;
+    background: hsl(var(--primary));
+    box-shadow: 0 0 10px hsl(var(--primary));
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .status-offline::before {
+    background: hsl(0 80% 50%);
+    box-shadow: 0 0 10px hsl(0 80% 50%);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--ring) / 0.6);
+  }
+}
+
+@layer utilities {
+  /* Animations */
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 10px hsl(var(--primary));
+    }
+    50% {
+      opacity: 0.5;
+      box-shadow: 0 0 20px hsl(var(--primary));
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% {
+      box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+    }
+    50% {
+      box-shadow: 0 0 40px hsl(var(--primary) / 0.5);
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+}
+
+
+
+
+
+
+
+
+/* Theme classes - only apply CSS for non-default themes */
+.theme-default {
+  /* No CSS variables - uses Tailwind's built-in dark theme */
+}
+
+/* Custom themes use CSS variables */
+.theme-dark-tech,
+.theme-glassmorphic,
+.theme-light-mode,
+.theme-midnight,
+.theme-cyberpunk {
+  /* Apply CSS variables for these themes */
+}
+
+.theme-dark-tech {
+  color-scheme: dark;
+  --primary-color: rgb(59 130 246);
+  --secondary-color: rgb(139 92 246);
+  --background-color: rgb(10 10 10);
+  --surface-color: rgba(30, 30, 30, 0.7);
+  --text-color: rgb(229 231 235);
+  --border-color: rgba(59, 130, 246, 0.2);
+}
+
+.theme-glassmorphic {
+  color-scheme: dark;
+  --primary-color: rgb(168 85 247);
+  --secondary-color: rgb(236 72 153);
+  --background-color: rgb(15 23 42);
+  --surface-color: rgba(255, 255, 255, 0.08);
+  --text-color: rgb(226 232 240);
+  --border-color: rgba(255, 255, 255, 0.12);
+  --backdrop-blur: 20px;
+}
+
+/* Enhanced glass effect only for glassmorphic theme */
+.theme-glassmorphic .bg-black\/30 {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.theme-glassmorphic .bg-black\/40 {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+.theme-glassmorphic .bg-black\/20 {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Other themes */
+.theme-light-mode {
+  color-scheme: light;
+  --primary-color: rgb(37 99 235);
+  --secondary-color: rgb(239 68 68);
+  --background-color: rgb(249 250 251);
+  --surface-color: rgba(255, 255, 255, 0.9);
+  --text-color: rgb(31 41 55);
+  --border-color: rgba(209, 213, 219, 0.5);
+}
+
+.theme-midnight {
+  color-scheme: dark;
+  --primary-color: rgb(14 165 233);
+  --secondary-color: rgb(34 211 238);
+  --background-color: rgb(3 7 18);
+  --surface-color: rgba(17, 24, 39, 0.8);
+  --text-color: rgb(209 213 219);
+  --border-color: rgba(14, 165, 233, 0.3);
+}
+
+.theme-cyberpunk {
+  color-scheme: dark;
+  --primary-color: rgb(16 185 129);
+  --secondary-color: rgb(245 158 11);
+  --background-color: rgb(15 23 42);
+  --surface-color: rgba(30, 41, 59, 0.7);
+  --text-color: rgb(226 232 240);
+  --border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* Apply CSS variables only for custom themes */
+.theme-dark-tech body,
+.theme-glassmorphic body,
+.theme-light-mode body,
+.theme-midnight body,
+.theme-cyberpunk body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.theme-dark-tech .text-primary,
+.theme-glassmorphic .text-primary,
+.theme-light-mode .text-primary,
+.theme-midnight .text-primary,
+.theme-cyberpunk .text-primary {
+  color: var(--primary-color);
+}
+
+.theme-dark-tech .border-primary\/20,
+.theme-glassmorphic .border-primary\/20,
+.theme-light-mode .border-primary\/20,
+.theme-midnight .border-primary\/20,
+.theme-cyberpunk .border-primary\/20 {
+  border-color: var(--border-color);
+}
+
+/* Font size classes only apply when active */
+.font-small body {
+  font-size: 0.875rem;
+}
+
+.font-large body {
+  font-size: 1.125rem;
+}
+
+.font-x-large body {
+  font-size: 1.25rem;
+}
+
+/* Disable animations */
+.no-animations * {
+  transition: none !important;
+  animation: none !important;
+}

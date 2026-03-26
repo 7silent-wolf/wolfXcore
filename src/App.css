@@ -1,0 +1,130 @@
+/* Global CSS Variables for Themes */
+:root {
+  --primary-color: rgb(59 130 246); /* blue-500 */
+  --secondary-color: rgb(139 92 246); /* purple-500 */
+  --background-color: rgb(10 10 10);
+  --surface-color: rgba(30, 30, 30, 0.7);
+  --text-color: rgb(229 231 235);
+  --border-color: rgba(59, 130, 246, 0.2);
+  --font-size-scale: 1;
+  --backdrop-blur: 0px;
+}
+
+/* Theme-specific classes */
+.theme-dark-tech {
+  color-scheme: dark;
+  --primary-color: rgb(59 130 246);
+  --secondary-color: rgb(139 92 246);
+  --background-color: rgb(10 10 10);
+  --surface-color: rgba(30, 30, 30, 0.7);
+  --text-color: rgb(229 231 235);
+  --border-color: rgba(59, 130, 246, 0.2);
+}
+
+.theme-glassmorphic {
+  color-scheme: dark;
+  --primary-color: rgb(168 85 247);
+  --secondary-color: rgb(236 72 153);
+  --background-color: rgb(15 23 42);
+  --surface-color: rgba(30, 41, 59, 0.7);
+  --text-color: rgb(226 232 240);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --backdrop-blur: 10px;
+}
+
+.theme-light-mode {
+  color-scheme: light;
+  --primary-color: rgb(37 99 235);
+  --secondary-color: rgb(239 68 68);
+  --background-color: rgb(249 250 251);
+  --surface-color: rgba(255, 255, 255, 0.9);
+  --text-color: rgb(31 41 55);
+  --border-color: rgba(209, 213, 219, 0.5);
+}
+
+.theme-midnight {
+  color-scheme: dark;
+  --primary-color: rgb(14 165 233);
+  --secondary-color: rgb(34 211 238);
+  --background-color: rgb(3 7 18);
+  --surface-color: rgba(17, 24, 39, 0.8);
+  --text-color: rgb(209 213 219);
+  --border-color: rgba(14, 165, 233, 0.3);
+}
+
+/* Apply CSS Variables */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: calc(1rem * var(--font-size-scale));
+}
+
+/* Apply backdrop blur for glassmorphic theme */
+.theme-glassmorphic .backdrop-blur-sm {
+  backdrop-filter: blur(var(--backdrop-blur));
+}
+
+/* Layout classes */
+.layout-compact {
+  --spacing-scale: 0.8;
+}
+
+.layout-spacious {
+  --spacing-scale: 1.2;
+}
+
+/* Font size classes */
+.font-small {
+  --font-size-scale: 0.875;
+}
+
+.font-medium {
+  --font-size-scale: 1;
+}
+
+.font-large {
+  --font-size-scale: 1.125;
+}
+
+.font-x-large {
+  --font-size-scale: 1.25;
+}
+
+/* Disable animations */
+.no-animations * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Apply primary color to elements */
+.text-primary {
+  color: var(--primary-color);
+}
+
+.bg-primary\/10 {
+  background-color: rgba(var(--primary-color-rgb), 0.1);
+}
+
+.border-primary\/20 {
+  border-color: rgba(var(--primary-color-rgb), 0.2);
+}
+
+/* You can add more utility classes that use the CSS variables */
+.bg-surface\/30 {
+  background-color: rgba(var(--surface-color-rgb), 0.3);
+}
+
+/* Convert CSS variables to RGB for opacity support */
+:root {
+  --primary-color-rgb: 59, 130, 246;
+  --secondary-color-rgb: 139, 92, 246;
+  --surface-color-rgb: 30, 30, 30;
+}
+
+.theme-light-mode {
+  --primary-color-rgb: 37, 99, 235;
+  --secondary-color-rgb: 239, 68, 68;
+  --surface-color-rgb: 255, 255, 255;
+}
+
+/* ... add similar for other themes */

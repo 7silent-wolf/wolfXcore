@@ -1,0 +1,154 @@
+root@silentwolf:/var/www/wolfhost# curl -s http://127.0.0.1:PORT/api/tutorials/test-id/likes
+root@silentwolf:/var/www/wolfhost# cat /etc/nginx/sites-enabled/* | grep proxy_pass
+    proxy_pass http://localhost:5000;
+        proxy_pass http://localhost:5000;
+        proxy_pass http://localhost:3002;
+        proxy_pass http://localhost:3003;
+        proxy_pass http://127.0.0.1:4000;
+        proxy_pass http://localhost:5001;
+        proxy_pass http://localhost:3002;
+root@silentwolf:/var/www/wolfhost#root@silentwolf:/var/www/wolfhost# root@silentwolf:/var/www/wolfhost# pm2 env 0
+-bash: root@silentwolf:/var/www/wolfhost#: No such file or directory
+root@silentwolf:/var/www/wolfhost# namespace: default
+-bash: namespace:: command not found
+root@silentwolf:/var/www/wolfhost# km_link: false
+-bash: km_link:: command not found
+root@silentwolf:/var/www/wolfhost# vizion_running: false
+-bash: vizion_running:: command not found
+root@silentwolf:/var/www/wolfhost# NODE_APP_INSTANCE: 0
+-bash: NODE_APP_INSTANCE:: command not found
+root@silentwolf:/var/www/wolfhost# SHELL: /bin/bash
+-bash: SHELL:: command not found
+root@silentwolf:/var/www/wolfhost# PWD: /var/www/wolfhost
+-bash: PWD:: command not found
+root@silentwolf:/var/www/wolfhost# LOGNAME: root
+-bash: LOGNAME:: command not found
+root@silentwolf:/var/www/wolfhost# XDG_SESSION_TYPE: tty
+-bash: XDG_SESSION_TYPE:: command not found
+root@silentwolf:/var/www/wolfhost# MOTD_SHOWN: pam
+-bash: MOTD_SHOWN:: command not found
+root@silentwolf:/var/www/wolfhost# HOME: /root
+-bash: HOME:: command not found
+root@silentwolf:/var/www/wolfhost# LANG: C.UTF-8
+-bash: LANG:: command not found
+root@silentwolf:/var/www/wolfhost# SSH_CONNECTION: 41.90.190.57 1212 62.171.170.186 22
+-bash: SSH_CONNECTION:: command not found
+root@silentwolf:/var/www/wolfhost# XDG_SESSION_CLASS: user
+-bash: XDG_SESSION_CLASS:: command not found
+root@silentwolf:/var/www/wolfhost# TERM: xterm-256color
+-bash: TERM:: command not found
+root@silentwolf:/var/www/wolfhost# USER: root
+-bash: USER:: command not found
+root@silentwolf:/var/www/wolfhost# SHLVL: 1
+-bash: SHLVL:: command not found
+root@silentwolf:/var/www/wolfhost# XDG_SESSION_ID: 14579
+-bash: XDG_SESSION_ID:: command not found
+root@silentwolf:/var/www/wolfhost# XDG_RUNTIME_DIR: /run/user/0
+-bash: XDG_RUNTIME_DIR:: command not found
+root@silentwolf:/var/www/wolfhost# SSH_CLIENT: 41.90.190.57 1212 22
+-bash: SSH_CLIENT:: command not found
+root@silentwolf:/var/www/wolfhost# PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+-bash: PATH:: command not found
+root@silentwolf:/var/www/wolfhost# DBUS_SESSION_BUS_ADDRESS: unix:path=/run/user/0/bus
+-bash: DBUS_SESSION_BUS_ADDRESS:: command not found
+root@silentwolf:/var/www/wolfhost# SSH_TTY: /dev/pts/0
+-bash: SSH_TTY:: command not found
+root@silentwolf:/var/www/wolfhost# OLDPWD: /var/www/wolfhost
+-bash: OLDPWD:: command not found
+root@silentwolf:/var/www/wolfhost# _: /usr/bin/pm2
+-bash: _:: command not found
+root@silentwolf:/var/www/wolfhost# PM2_USAGE: CLI
+-bash: PM2_USAGE:: command not found
+root@silentwolf:/var/www/wolfhost# PM2_HOME: /root/.pm2
+-bash: PM2_HOME:: command not found
+root@silentwolf:/var/www/wolfhost# unique_id: d49c0cc8-1e7c-408a-8dc8-ed68830c13ae
+-bash: unique_id:: command not found
+root@silentwolf:/var/www/wolfhost# version: 0.0.0
+-bash: version:: command not found
+root@silentwolf:/var/www/wolfhost# node_version: 22.22.0
+-bash: node_version:: command not found
+root@silentwolf:/var/www/wolfhost# root@silentwolf:/var/www/wolfhost# curl -s http://127.0.0.1:PORT/api/tutorials/test-id/likes
+-bash: root@silentwolf:/var/www/wolfhost#: No such file or directory
+root@silentwolf:/var/www/wolfhost# root@silentwolf:/var/www/wolfhost# cat /etc/nginx/sites-enabled/* | grep proxy_pass
+-bash: root@silentwolf:/var/www/wolfhost#: No such file or directory
+root@silentwolf:/var/www/wolfhost#     proxy_pass http://localhost:5000;
+-bash: proxy_pass: command not found
+root@silentwolf:/var/www/wolfhost#         proxy_pass http://localhost:5000;
+-bash: proxy_pass: command not found
+root@silentwolf:/var/www/wolfhost#         proxy_pass http://localhost:3002;
+-bash: proxy_pass: command not found
+root@silentwolf:/var/www/wolfhost#         proxy_pass http://localhost:3003;
+-bash: proxy_pass: command not found
+root@silentwolf:/var/www/wolfhost#         proxy_pass http://127.0.0.1:4000;
+-bash: proxy_pass: command not found
+root@silentwolf:/var/www/wolfhost#         proxy_pass http://localhost:5001;
+-bash: proxy_pass: command not found
+root@silentwolf:/var/www/wolfhost#         proxy_pass http://localhost:3002;
+-bash: proxy_pass: command not found
+root@silentwolf:/var/www/wolfhost# root@silentwolf:/var/www/wolfhost#
+-bash: root@silentwolf:/var/www/wolfhost#: No such file or directory
+root@silentwolf:/var/www/wolfhost# pm2 logs wolfhost --lines 30
+[TAILING] Tailing last 30 lines for [wolfhost] process (change the value with --lines option)
+/root/.pm2/logs/wolfhost-error.log last 30 lines:
+0|wolfhost | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@supabase/supabase-js' imported from /var/www/wolfhost/server/index.js
+0|wolfhost |     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:314:9)
+0|wolfhost |     at packageResolve (node:internal/modules/esm/resolve:767:81)
+0|wolfhost |     at moduleResolve (node:internal/modules/esm/resolve:853:18)
+0|wolfhost |     at defaultResolve (node:internal/modules/esm/resolve:983:11)
+0|wolfhost |     at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+0|wolfhost |     at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+0|wolfhost |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+0|wolfhost |     at ModuleJob._link (node:internal/modules/esm/module_job:182:49)
+0|wolfhost |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+0|wolfhost |   code: 'ERR_MODULE_NOT_FOUND'
+0|wolfhost | }
+0|wolfhost | SyntaxError: Invalid or unexpected token
+0|wolfhost |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+0|wolfhost |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:107:18)
+0|wolfhost |     at #translate (node:internal/modules/esm/loader:546:20)
+0|wolfhost |     at afterLoad (node:internal/modules/esm/loader:596:29)
+0|wolfhost |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:601:12)
+0|wolfhost |     at #createModuleJob (node:internal/modules/esm/loader:624:36)
+0|wolfhost |     at #getJobFromResolveResult (node:internal/modules/esm/loader:343:34)
+0|wolfhost |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:311:41)
+0|wolfhost |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+0|wolfhost |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:664:25)
+
+/root/.pm2/logs/wolfhost-out.log last 30 lines:
+0|wolfhost | Startup: Egg startup: FROM EGG
+0|wolfhost | Startup: Egg docker image: ghcr.io/pelican-eggs/yolks:nodejs_24
+0|wolfhost | Startup: Super admin ID resolved: 1
+0|wolfhost | WolfHost server running on port 4000
+0|wolfhost | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, input-validation=ON
+0|wolfhost | Mode: PRODUCTION
+0|wolfhost | Startup: Fetching Pterodactyl egg variables...
+0|wolfhost | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","USER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKE
+N","UNNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+0|wolfhost | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANCH":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USE
+RNAME":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NODE_ARGS":""}
+0|wolfhost | Startup: Egg startup: FROM EGG
+0|wolfhost | Startup: Egg docker image: ghcr.io/pelican-eggs/yolks:nodejs_24
+0|wolfhost | Startup: Super admin ID resolved: 1
+0|wolfhost | WolfHost server running on port 4000
+0|wolfhost | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, input-validation=ON
+0|wolfhost | Mode: PRODUCTION
+0|wolfhost | Startup: Fetching Pterodactyl egg variables...
+0|wolfhost | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","USER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKE
+N","UNNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+0|wolfhost | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANCH":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USE
+RNAME":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NODE_ARGS":""}
+0|wolfhost | Startup: Egg startup: FROM EGG
+0|wolfhost | Startup: Egg docker image: ghcr.io/pelican-eggs/yolks:nodejs_24
+0|wolfhost | Startup: Super admin ID resolved: 1
+0|wolfhost | WolfHost server running on port 4000
+0|wolfhost | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, input-validation=ON
+0|wolfhost | Mode: PRODUCTION
+0|wolfhost | Startup: Fetching Pterodactyl egg variables...
+0|wolfhost | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","USER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKE
+N","UNNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+0|wolfhost | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANCH":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USE
+RNAME":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NODE_ARGS":""}
+0|wolfhost | Startup: Egg startup: FROM EGG
+0|wolfhost | Startup: Egg docker image: ghcr.io/pelican-eggs/yolks:nodejs_24
+0|wolfhost | Startup: Super admin ID resolved: 1
+

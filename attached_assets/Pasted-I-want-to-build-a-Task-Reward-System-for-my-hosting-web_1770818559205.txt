@@ -1,0 +1,83 @@
+I want to build a Task Reward System for my hosting website.
+
+IMPORTANT:
+Before generating the final code, ask me to provide the following links:
+
+1. WhatsApp Channel link
+2. WhatsApp Group link
+3. Telegram Group link
+4. YouTube Channel link
+
+Do NOT hardcode placeholder links. Prompt me first for each link before generating the full implementation.
+
+---------------------------------------
+
+System Requirements:
+
+• Users must be logged in to access the Tasks page.
+• Display 4 tasks:
+    - Follow WhatsApp Channel
+    - Join WhatsApp Group
+    - Join Telegram Group
+    - Subscribe to YouTube Channel
+
+• Each task should have:
+    - A button to open the link in a new tab
+    - A "Mark as Completed" button
+    - A status indicator (Completed / Not Completed)
+
+• Store task progress in the database linked to the logged-in user.
+• Prevent the same task from being completed more than once.
+• Show a progress counter like: 2/4 Tasks Completed.
+
+---------------------------------------
+
+Reward Logic:
+
+• When ALL 4 tasks are completed:
+    - Show a button: "Unlock My Free Server"
+    - When clicked, automatically create a server in my Pterodactyl panel using the Application API.
+
+• Use axios for API requests.
+• Use the PANEL_API_KEY stored in environment variables.
+• Do NOT expose API keys in frontend.
+
+• After server creation:
+    - Store the server ID in the database.
+    - Prevent duplicate server creation.
+    - Allow only ONE free server per user.
+
+---------------------------------------
+
+Security Requirements:
+
+• Store user IP at signup.
+• Allow only one free server per IP.
+• Check if user already has a server before creating a new one.
+• Add proper error handling.
+• Log suspicious attempts.
+• Do not allow multiple reward claims.
+
+---------------------------------------
+
+UI Requirements:
+
+• Modern clean design.
+• Show task progress visually.
+• Show success message after server creation.
+• Show error message if user already claimed reward.
+
+---------------------------------------
+
+Server Creation:
+
+• Use predefined server resources (RAM, CPU, Disk).
+• Use a predefined Node and Egg.
+• Make the server name include the username.
+• Ensure API request follows Pterodactyl Application API format.
+
+---------------------------------------
+
+Use clean backend structure.
+Use proper async/await.
+Add comments explaining important parts.

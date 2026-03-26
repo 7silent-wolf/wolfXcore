@@ -1,0 +1,57 @@
+────────┘
+root@silentwolf:/var/www/wolfhost# pm2 logs wolfhost --lines 80
+[TAILING] Tailing last 80 lines for [wolfhost] process (change the val
+ue with --lines option)
+/root/.pm2/logs/wolfhost-error.log last 80 lines:
+/root/.pm2/logs/wolfhost-out.log last 80 lines:
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | Startup: Fetching Pterodactyl egg variables...
+12|wolfhos | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","U
+SER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKEN","U
+NNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+12|wolfhos | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANC
+H":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USERNAME
+":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NO
+DE_ARGS":""}
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | Startup: Fetching Pterodactyl egg variables...
+12|wolfhos | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","U
+SER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKEN","U
+NNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+12|wolfhos | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANC
+H":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USERNAME
+":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NO
+DE_ARGS":""}
+12|wolfhos | Startup: Egg startup: FROM EGG
+12|wolfhos | Startup: Egg docker image: ghcr.io/pelican-eggs/yolks:nod
+ejs_24
+12|wolfhos | WolfHost server running on port 5000
+12|wolfhos | Security: helmet=ON, cors=RESTRICTED, rate-limiting=ON, i
+nput-validation=ON
+12|wolfhos | Mode: PRODUCTION
+12|wolfhos | Startup: Fetching Pterodactyl egg variables...
+12|wolfhos | Startup: Egg environment keys: ["GIT_ADDRESS","BRANCH","U
+SER_UPLOAD","AUTO_UPDATE","NODE_PACKAGES","USERNAME","ACCESS_TOKEN","U
+NNODE_PACKAGES","MAIN_FILE","NODE_ARGS"]
+12|wolfhos | Startup: Egg environment values: {"GIT_ADDRESS":"","BRANC
+H":"","USER_UPLOAD":"1","AUTO_UPDATE":"0","NODE_PACKAGES":"","USERNAME
+":"","ACCESS_TOKEN":"","UNNODE_PACKAGES":"","MAIN_FILE":"index.js","NO
+DE_ARGS":""}
+12|wolfhos | Startup: Egg startup: FROM EGG
+12|wolfhos | Startup: Egg docker image: ghcr.io/pelican-eggs/yolks:nod
+ejs_24
+

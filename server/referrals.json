@@ -1,0 +1,27 @@
+{
+  "codes": {
+    "WOLF-CKIGKT": {
+      "userId": "2",
+      "email": "wolfsilent906@gmail.com",
+      "createdAt": "2026-02-11T11:31:42.236Z"
+    },
+    "WOLF-UJ7TVT": {
+      "userId": "1",
+      "email": "britonkiplangat@0gmail.com",
+      "createdAt": "2026-02-11T12:20:47.355Z"
+    }
+  },
+  "referrals": [
+    {
+      "referrerCode": "WOLF-CKIGKT",
+      "referrerUserId": "2",
+      "referrerEmail": "wolfsilent906@gmail.com",
+      "referredUserId": "11",
+      "referredEmail": "kip@gmail.com",
+      "referredUsername": "kip",
+      "registeredAt": "2026-02-11T11:34:37.073Z",
+      "completed": false,
+      "completedAt": null
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "email": "wolfsilent906@gmail.com",
+    "amount": 50,
+    "description": "Server \"wolf\" (Limited plan)",
+    "serverId": "5",
+    "date": "2026-02-11T10:31:02.857Z"
+  },
+  {
+    "email": "britonkiplangat@0gmail.com",
+    "amount": 50,
+    "description": "Deploy Server \"wolf-deploy-1771106129058\" (Limited plan)",
+    "serverId": "70",
+    "date": "2026-02-14T21:55:29.442Z"
+  },
+  {
+    "email": "silent@xwolf.space",
+    "amount": 50,
+    "description": "Server \"kip-0\" (Limited plan)",
+    "serverId": "20",
+    "date": "2026-02-25T13:51:38.212Z"
+  },
+  {
+    "email": "silent@xwolf.space",
+    "amount": 50,
+    "description": "Server \"my-123\" (Limited plan)",
+    "serverId": "119",
+    "date": "2026-03-09T22:43:38.152Z"
+  },
+  {
+    "email": "silent@xwolf.space",
+    "amount": 50,
+    "description": "Direct Bot \"WOLFBOT\"",
+    "serverId": "ee58b37a-b695-4823-b186-3b1d38c3d690",
+    "date": "2026-03-22T11:55:37.599Z"
+  }
+]
