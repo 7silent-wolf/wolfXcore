@@ -73,6 +73,16 @@ Bots run as **detached Node.js processes** on the wolfXnode server (no Pterodact
 - Bot port formula: `10000 + (parseInt(deployId.replace(/-/g,'').slice(0,6), 16) % 50000)` (deterministic)
 - `BOT_PATCHED_PATH` — `server/tools/` prepended to `PATH` for all spawned processes
 
+### Native library fix (`libuuid.so.1` and similar)
+On Replit's NixOS environment, the Node.js binary uses a Nix-patched dynamic linker that does **not** search standard Linux paths like `/lib/x86_64-linux-gnu`. Native Node.js addons that link against `libuuid`, `libssl`, `libsodium`, etc. fail with "cannot open shared object file".
+
+**Fix**: `buildBotLdLibraryPath()` probes standard Linux library directories at server startup and adds any that exist to `LD_LIBRARY_PATH`, which is injected into all spawned bot environments:
+- `/lib/x86_64-linux-gnu` (contains `libuuid.so.1`, `libssl.so`, `libz.so`, etc.)
+- `/usr/lib/x86_64-linux-gnu`
+- `/usr/local/lib`, `/usr/lib`, `/lib`
+
+On a real VPS these paths already work; this fix is purely for Replit. The library count is logged at startup: `[DirectRunner] LD_LIBRARY_PATH: N dir(s)`.
+
 ### Auto-restart after self-exit (e.g. zip update)
 When a bot calls `process.exit()` to restart itself (e.g. after a zip self-update), wolfXnode detects the exit and brings it back automatically:
 

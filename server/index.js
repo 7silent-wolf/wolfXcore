@@ -4318,6 +4318,42 @@ const BOT_RUNNER       = path.join(__dirname, 'bot_runner.cjs');
 const WOLFXNODE_TOOLS  = path.join(__dirname, 'tools');
 // Prepend our bundled tools (unzip shim, etc.) to PATH for every spawned process
 const BOT_PATCHED_PATH = `${WOLFXNODE_TOOLS}:${process.env.PATH || '/usr/local/bin:/usr/bin:/bin'}`;
+
+// ── Native-library fix ────────────────────────────────────────────────────
+// In the Replit / NixOS environment the Node.js binary is Nix-patched and its
+// dynamic linker does NOT search /lib/x86_64-linux-gnu or /usr/lib by default.
+// Native bot addons that link against libuuid.so.1, libssl.so, libsodium.so,
+// etc. therefore fail with "cannot open shared object file".
+// We build LD_LIBRARY_PATH at startup by probing candidate directories and
+// inject it into every spawned bot process so all standard shared libs work.
+function buildBotLdLibraryPath() {
+  const segments = [];
+
+  // Carry through whatever the server process already has
+  if (process.env.LD_LIBRARY_PATH) segments.push(process.env.LD_LIBRARY_PATH);
+
+  // Standard Linux multi-arch library paths (Debian / Ubuntu layout that
+  // exists alongside Nix in Replit's hybrid container environment)
+  const STANDARD = [
+    '/lib/x86_64-linux-gnu',
+    '/usr/lib/x86_64-linux-gnu',
+    '/lib/aarch64-linux-gnu',
+    '/usr/lib/aarch64-linux-gnu',
+    '/usr/local/lib',
+    '/usr/lib',
+    '/lib',
+  ];
+
+  STANDARD.forEach(p => {
+    try { if (fs.statSync(p).isDirectory()) segments.push(p); } catch (_) {}
+  });
+
+  return [...new Set(segments)].join(':');
+}
+
+const BOT_LD_LIBRARY_PATH = buildBotLdLibraryPath();
+serverLog(`[DirectRunner] LD_LIBRARY_PATH: ${BOT_LD_LIBRARY_PATH ? BOT_LD_LIBRARY_PATH.split(':').length + ' dir(s)' : 'empty'}`);
+
 fs.mkdirSync(BOTS_BASE_DIR, { recursive: true });
 fs.mkdirSync(BOT_LOG_DIR,   { recursive: true });
 
@@ -4327,6 +4363,7 @@ const _directLogs = new Map();      // id → [{ts, level, msg}]  (install-phase
 const _directStatus = new Map();    // id → 'queued'|'deploying'|'running'|'stopped'|'failed'
 const _intentionallyStopped = new Set(); // ids that the user manually stopped — never auto-restart these
 const _pendingAutoRestart   = new Set(); // ids that already have a restart queued — no double-restarts
+const _crashCounts = new Map();          // id → { count, windowStart } — crash loop protection
 
 // ── Log-file helpers ──────────────────────────────────────────────────────
 function getBotLogFile(id) { return path.join(BOT_LOG_DIR, `${id}.jsonl`); }
@@ -4429,6 +4466,61 @@ function setDirectStatus(id, status) {
   });
 })();
 
+// ── Crash-loop protection ──────────────────────────────────────────────────
+// Allow up to MAX_CRASHES restarts within CRASH_WINDOW_MS before giving up.
+// After the window expires the counter resets so a stable bot that crashes
+// hours later will still get restarted.
+const MAX_CRASHES      = 5;
+const CRASH_WINDOW_MS  = 2 * 60 * 1000; // 2 minutes
+
+function recordCrash(id) {
+  const now = Date.now();
+  const rec = _crashCounts.get(id) || { count: 0, windowStart: now };
+  if (now - rec.windowStart > CRASH_WINDOW_MS) {
+    // Window expired — reset
+    rec.count = 0;
+    rec.windowStart = now;
+  }
+  rec.count += 1;
+  _crashCounts.set(id, rec);
+  return rec.count;
+}
+
+function shouldAutoRestart(id) {
+  if (_intentionallyStopped.has(id)) return false;
+  if (_pendingAutoRestart.has(id)) return false;
+  const rec = _crashCounts.get(id);
+  if (!rec) return true;
+  const windowExpired = Date.now() - rec.windowStart > CRASH_WINDOW_MS;
+  return windowExpired || rec.count < MAX_CRASHES;
+}
+
+function scheduleAutoRestart(deployId, delayMs = 3000) {
+  const crashCount = recordCrash(deployId);
+  if (!shouldAutoRestart(deployId)) {
+    serverLog(`[AutoRestart] Bot ${deployId} crashed ${crashCount} times — stopping auto-restart`);
+    appendBotLog(deployId, 'error',
+      `\x1b[31m[wolfXnode] Bot crashed ${crashCount} times in 2 min — auto-restart disabled. Use the Restart button to retry.\x1b[0m`);
+    setDirectStatus(deployId, 'failed');
+    return;
+  }
+
+  _pendingAutoRestart.add(deployId);
+  serverLog(`[AutoRestart] ${deployId} exited (crash #${crashCount}) — restarting in ${delayMs / 1000}s`);
+  appendBotLog(deployId, 'warn',
+    `\x1b[33m[wolfXnode] Bot stopped (restart ${crashCount}/${MAX_CRASHES}) — retrying in ${delayMs / 1000}s…\x1b[0m`);
+
+  setTimeout(() => {
+    _pendingAutoRestart.delete(deployId);
+    if (_intentionallyStopped.has(deployId)) return;
+    const fresh = loadDirectDeployments().find(s => s.id === deployId);
+    if (!fresh) return;
+    appendBotLog(deployId, 'info', '\x1b[32m[wolfXnode] Restarting now…\x1b[0m');
+    runDirectDeployment(deployId, fresh.repoUrl, fresh.mainFile || 'index.js', fresh.envVars || {})
+      .catch(err => serverLog(`[AutoRestart] Restart failed for ${deployId}: ${err.message}`));
+  }, delayMs);
+}
+
 // ── Auto-restart heartbeat ─────────────────────────────────────────────────
 // Every 12 seconds check all "running" bots. If a runner PID has died (e.g.
 // bot did a zip self-update and called process.exit) and the user did NOT
@@ -4436,32 +4528,18 @@ function setDirectStatus(id, status) {
 setInterval(() => {
   const all = loadDirectDeployments();
   all.forEach(d => {
-    if (_intentionallyStopped.has(d.id)) return;          // user stopped it — don't touch
-    if (_pendingAutoRestart.has(d.id)) return;            // already queued
-    if (d.status !== 'running') return;                   // not expected to be alive
+    if (!shouldAutoRestart(d.id)) return;
+    if (d.status !== 'running') return;
     if (!d.runnerPid) return;
     if (isPidAlive(d.runnerPid)) return;                  // still alive — all good
 
-    // PID is dead but status says running — schedule auto-restart
-    _pendingAutoRestart.add(d.id);
-    serverLog(`[AutoRestart] Bot ${d.id} (${d.botName || d.botId}) exited — auto-restarting in 3s`);
-    appendBotLog(d.id, 'warn', '\x1b[33m[wolfXnode] Bot process stopped — auto-restarting in 3s…\x1b[0m');
-
-    setTimeout(() => {
-      _pendingAutoRestart.delete(d.id);
-      if (_intentionallyStopped.has(d.id)) return;       // user stopped it while we were waiting
-      const fresh = loadDirectDeployments().find(s => s.id === d.id);
-      if (!fresh) return;
-      appendBotLog(d.id, 'info', '\x1b[32m[wolfXnode] Restarting now…\x1b[0m');
-      runDirectDeployment(d.id, fresh.repoUrl, fresh.mainFile || 'index.js', fresh.envVars || {})
-        .catch(err => serverLog(`[AutoRestart] Restart failed for ${d.id}: ${err.message}`));
-    }, 3000);
+    scheduleAutoRestart(d.id, 3000);
   });
 }, 12000);
 
 async function spawnStep(deployId, cmd, args, opts) {
   return new Promise((resolve, reject) => {
-    const env = { ...process.env, PATH: BOT_PATCHED_PATH, ...(opts.env || {}) };
+    const env = { ...process.env, PATH: BOT_PATCHED_PATH, LD_LIBRARY_PATH: BOT_LD_LIBRARY_PATH, ...(opts.env || {}) };
     const proc = spawn(cmd, args, { ...opts, env, stdio: ['ignore', 'pipe', 'pipe'] });
     proc.stdout?.on('data', d => d.toString().split('\n').forEach(l => l.trim() && addDirectLog(deployId, 'info', l.trim())));
     proc.stderr?.on('data', d => d.toString().split('\n').forEach(l => l.trim() && addDirectLog(deployId, 'warn', l.trim())));
@@ -4515,6 +4593,7 @@ async function runDirectDeployment(deployId, repoUrl, mainFile, envVars) {
       NODE_ENV: 'production',
       WOLFXNODE_LOG_FILE: getBotLogFile(deployId),
       PATH: BOT_PATCHED_PATH,
+      LD_LIBRARY_PATH: BOT_LD_LIBRARY_PATH,
     };
     addDirectLog(deployId, 'info', `Assigned bot port: ${_botPort}`);
     const runner = spawn(process.execPath, [BOT_RUNNER, entryFile, deployDir], {
@@ -4528,25 +4607,11 @@ async function runDirectDeployment(deployId, repoUrl, mainFile, envVars) {
     // If the bot did a self-restart (e.g. zip update → process.exit(0)) and
     // the user did NOT manually stop it, trigger an auto-restart immediately.
     runner.on('close', (code) => {
-      if (_intentionallyStopped.has(deployId)) return;   // user stopped it — don't revive
-      if (_pendingAutoRestart.has(deployId)) return;      // heartbeat already queued a restart
-
       const currentStatus = _directStatus.get(deployId);
       if (currentStatus === 'stopped' || currentStatus === 'failed') return;
+      if (!shouldAutoRestart(deployId)) return;
 
-      _pendingAutoRestart.add(deployId);
-      serverLog(`[AutoRestart] Runner for ${deployId} closed (code=${code}) — auto-restarting in 3s`);
-      appendBotLog(deployId, 'warn', `\x1b[33m[wolfXnode] Bot exited (code ${code}) — auto-restarting in 3s…\x1b[0m`);
-
-      setTimeout(() => {
-        _pendingAutoRestart.delete(deployId);
-        if (_intentionallyStopped.has(deployId)) return;
-        const fresh = loadDirectDeployments().find(s => s.id === deployId);
-        if (!fresh) return;
-        appendBotLog(deployId, 'info', '\x1b[32m[wolfXnode] Restarting now…\x1b[0m');
-        runDirectDeployment(deployId, fresh.repoUrl, fresh.mainFile || 'index.js', fresh.envVars || {})
-          .catch(err => serverLog(`[AutoRestart] Restart failed for ${deployId}: ${err.message}`));
-      }, 3000);
+      scheduleAutoRestart(deployId, 3000);
     });
 
     runner.unref(); // Detach from parent — survives server restart
@@ -4701,6 +4766,7 @@ app.post('/api/bots/direct/:id/restart', authenticateToken, async (req, res) => 
 
   _intentionallyStopped.delete(req.params.id);     // user explicitly wants it running again
   _pendingAutoRestart.delete(req.params.id);
+  _crashCounts.delete(req.params.id);              // reset crash counter so it gets fresh auto-restart budget
   appendBotLog(req.params.id, 'info', '[wolfXnode] Restart requested — stopping old process…');
   killRunnerPid(dep, req.params.id);
   appendBotLog(req.params.id, 'info', '[wolfXnode] Restarting bot…');
@@ -4729,6 +4795,7 @@ app.delete('/api/bots/direct/:id', authenticateToken, async (req, res) => {
   _directStatus.delete(dep.id);
   _intentionallyStopped.delete(dep.id);
   _pendingAutoRestart.delete(dep.id);
+  _crashCounts.delete(dep.id);
 
   return res.json({ success: true });
 });
@@ -4774,7 +4841,7 @@ app.post('/api/bots/direct/:id/exec', authenticateToken, (req, res) => {
   const child = spawn('sh', ['-c', cmd], {
     cwd: fs.existsSync(deployDir) ? deployDir : process.cwd(),
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env, FORCE_COLOR: '1', PATH: BOT_PATCHED_PATH },
+    env: { ...process.env, FORCE_COLOR: '1', PATH: BOT_PATCHED_PATH, LD_LIBRARY_PATH: BOT_LD_LIBRARY_PATH },
   });
 
   let outBuf = '', errBuf = '';
