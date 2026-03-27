@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { Terminal, Square, Trash2, RotateCcw, ArrowLeft, ChevronDown, Send, TerminalSquare } from 'lucide-react';
+import { Terminal, Square, Trash2, RotateCcw, ArrowLeft, ChevronDown, Send, TerminalSquare, Maximize2, Minimize2, X } from 'lucide-react';
 import { toast } from 'sonner';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -289,6 +289,14 @@ export default function DirectBotLog() {
   });
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Close fullscreen on ESC
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape' && isFullscreen) setIsFullscreen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isFullscreen]);
 
   const handleDelete = () => setShowDeleteModal(true);
   const confirmDeleteAction = () => {
@@ -384,8 +392,12 @@ export default function DirectBotLog() {
 
       {/* Terminal */}
       <div
-        className="rounded-xl border border-emerald-500/20 bg-black/80 backdrop-blur-sm overflow-hidden"
-        style={{ boxShadow: '0 0 40px rgba(0,0,0,0.6)' }}
+        className={
+          isFullscreen
+            ? 'fixed inset-0 z-50 flex flex-col bg-black/98 border-t border-emerald-500/20'
+            : 'rounded-xl border border-emerald-500/20 bg-black/80 backdrop-blur-sm overflow-hidden'
+        }
+        style={isFullscreen ? {} : { boxShadow: '0 0 40px rgba(0,0,0,0.6)' }}
       >
         {/* Title bar */}
         <div className="flex items-center justify-between px-4 py-2 border-b border-emerald-500/15 bg-black/60">
@@ -443,6 +455,14 @@ export default function DirectBotLog() {
             >
               reload
             </button>
+            <button
+              onClick={() => setIsFullscreen(v => !v)}
+              title={isFullscreen ? 'Exit fullscreen (ESC)' : 'Fullscreen'}
+              className="text-[10px] font-mono text-gray-600 hover:text-emerald-400 transition-colors ml-1"
+              data-testid="button-fullscreen"
+            >
+              {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+            </button>
           </div>
         </div>
 
@@ -450,7 +470,7 @@ export default function DirectBotLog() {
         <div
           ref={logBoxRef}
           onScroll={handleScroll}
-          className="h-[440px] overflow-y-auto p-4 font-mono space-y-0.5 text-gray-200"
+          className={`overflow-y-auto p-4 font-mono space-y-0.5 text-gray-200 ${isFullscreen ? 'flex-1' : 'h-[440px]'}`}
           style={{ scrollBehavior: 'smooth' }}
           data-testid="log-terminal"
         >
