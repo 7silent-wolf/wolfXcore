@@ -218,8 +218,10 @@ export default function MyBots() {
                             <Clock className="w-3 h-3" />
                             {formatDate(dep.deployedAt)}
                           </span>
-                          <span className="text-[10px] text-gray-700">·</span>
-                          <span className="text-[10px] text-yellow-600 font-mono">KES {dep.priceKES} paid</span>
+                          {dep.priceKES > 0 && <>
+                            <span className="text-[10px] text-gray-700">·</span>
+                            <span className="text-[10px] text-yellow-600 font-mono">KES {dep.priceKES} paid</span>
+                          </>}
                           {dep.serverIdentifier && (
                             <>
                               <span className="text-[10px] text-gray-700">·</span>
@@ -314,8 +316,10 @@ export default function MyBots() {
                             <Clock className="w-3 h-3" />
                             {formatDate(dep.deployedAt)}
                           </span>
-                          <span className="text-[10px] text-gray-700">·</span>
-                          <span className="text-[10px] text-yellow-600 font-mono">KES {dep.priceKES} paid</span>
+                          {dep.priceKES > 0 && <>
+                            <span className="text-[10px] text-gray-700">·</span>
+                            <span className="text-[10px] text-yellow-600 font-mono">KES {dep.priceKES} paid</span>
+                          </>}
                           {dep.pid && (
                             <>
                               <span className="text-[10px] text-gray-700">·</span>

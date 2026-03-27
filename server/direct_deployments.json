@@ -19,7 +19,26 @@
     "priceKES": 50,
     "status": "running",
     "deployedAt": "2026-03-26T19:26:12.225Z",
-    "updatedAt": "2026-03-27T09:22:21.253Z",
-    "runnerPid": 2522
+    "updatedAt": "2026-03-27T14:31:29.853Z",
+    "runnerPid": 1451
+  },
+  {
+    "id": "59279e8d-bcd3-4112-a366-d66d9db5ba88",
+    "type": "direct",
+    "userId": "1",
+    "userEmail": "britonkiplangat@0gmail.com",
+    "botId": "cab54e93-2acc-481f-a523-3c8ba67b9429",
+    "botName": "TOOSII-XD",
+    "serverName": "toosii-xd",
+    "repoUrl": "https://github.com/TOOSII102/TOOSII-XD-ULTRA",
+    "mainFile": "index.js",
+    "envVars": {
+      "OWNER_NUMBER": "254733961184"
+    },
+    "priceKES": 50,
+    "status": "running",
+    "deployedAt": "2026-03-27T12:23:27.917Z",
+    "updatedAt": "2026-03-27T14:31:35.836Z",
+    "runnerPid": 1492
   }
 ]

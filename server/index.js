@@ -2503,7 +2503,7 @@ async function findFreeAllocation(nodeId = null) {
   }
 }
 
-const TIER_PRICES = { Limited: 50, Unlimited: 100, Admin: 250 };
+const TIER_PRICES = { Limited: 0, Unlimited: 0, Admin: 0 }; // Free mode
 
 app.post('/api/admin/upload-server', adminLimiter, authenticateToken, requireAdmin, async (req, res) => {
   try {
@@ -2665,14 +2665,7 @@ app.post('/api/servers/create', authenticateToken, [
       return res.status(403).json({ success: false, message: 'User verification failed' });
     }
 
-    const requiredAmount = TIER_PRICES[plan] || 50;
-    const balance = await verifyUserBalance(userEmail, requiredAmount);
-    if (balance < requiredAmount) {
-      return res.status(402).json({
-        success: false,
-        message: `Insufficient balance. You need KES ${requiredAmount} but have KES ${balance.toFixed(2)}. Please top up your wallet first.`,
-      });
-    }
+    const requiredAmount = TIER_PRICES[plan] || 0; // Free mode — always 0
 
     const allocationId = await findFreeAllocation();
     if (!allocationId) {
@@ -2755,7 +2748,7 @@ app.post('/api/servers/create', authenticateToken, [
     const serverAttrs = pteroData.attributes;
     serverLog('Server created successfully:', serverAttrs.id, serverAttrs.identifier);
 
-    recordSpending(userEmail, requiredAmount, `Server "${name}" (${plan} plan)`, serverAttrs.id);
+    if (requiredAmount > 0) recordSpending(userEmail, requiredAmount, `Server "${name}" (${plan} plan)`, serverAttrs.id);
     serverLog(`Recorded spending: KES ${requiredAmount} for user ${userEmail}, server ${serverAttrs.id}`);
 
     addNotification(userId, 'server', 'Server Created', `Your "${name}" server (${plan} plan) has been deployed successfully!`);
@@ -4313,7 +4306,7 @@ function saveBotDeployments(data) {
   try { fs.writeFileSync(BOT_DEPLOYMENTS_FILE, JSON.stringify(data, null, 2), 'utf8'); } catch (e) { console.error('Error saving bot deployments:', e); }
 }
 
-const BOT_DEPLOYMENT_PRICE = 50;
+const BOT_DEPLOYMENT_PRICE = 0; // Free mode — no charge for deployments
 
 // ============================================================
 // DIRECT BOT RUNNER (wolfdeploy-style — no Pterodactyl)
@@ -4527,14 +4520,8 @@ app.post('/api/bots/direct-deploy', authenticateToken, [
     const bot = catalog.find(b => b.id === botId && b.active !== false);
     if (!bot) return res.status(404).json({ success: false, message: 'Bot not found in catalog' });
 
-    const price = bot.priceKES || BOT_DEPLOYMENT_PRICE;
+    const price = 0; // Free mode
     const isAdmin = req.user.isAdmin || false;
-    if (!isAdmin) {
-      const balance = await verifyUserBalance(userEmail, price);
-      if (balance < price) {
-        return res.status(402).json({ success: false, message: `Insufficient balance. Need KES ${price}, have KES ${balance.toFixed(2)}.` });
-      }
-    }
 
     const id = crypto.randomUUID();
     const deployment = {
@@ -4560,7 +4547,7 @@ app.post('/api/bots/direct-deploy', authenticateToken, [
     _directStatus.set(id, 'queued');
     _directLogs.set(id, [{ ts: new Date().toISOString(), level: 'info', msg: `Deployment "${serverName}" queued for "${bot.name}"` }]);
 
-    if (!isAdmin) recordSpending(userEmail, price, `Direct Bot "${bot.name}"`, id);
+    if (!isAdmin && price > 0) recordSpending(userEmail, price, `Direct Bot "${bot.name}"`, id);
     addNotification(userId, 'server', 'Bot Deploying', `Your "${bot.name}" bot is starting up!`);
 
     // Start deployment in background (non-blocking)
@@ -5042,17 +5029,8 @@ app.post('/api/bots/deploy', authenticateToken, [
     const bot = catalog.find(b => b.id === botId && b.active !== false);
     if (!bot) return res.status(404).json({ success: false, message: 'Bot not found in catalog' });
 
-    const price = bot.priceKES || BOT_DEPLOYMENT_PRICE;
+    const price = 0; // Free mode
     const isAdmin = req.user.isAdmin || false;
-    if (!isAdmin) {
-      const balance = await verifyUserBalance(userEmail, price);
-      if (balance < price) {
-        return res.status(402).json({
-          success: false,
-          message: `Insufficient balance. You need KES ${price} but have KES ${balance.toFixed(2)}. Please top up your wallet first.`,
-        });
-      }
-    }
 
     const allocationId = await findFreeAllocation();
     if (!allocationId) return res.status(503).json({ success: false, message: 'No available ports. Please try again later.' });
@@ -5109,7 +5087,7 @@ app.post('/api/bots/deploy', authenticateToken, [
     }
 
     const serverAttrs = pteroData.attributes;
-    if (!isAdmin) recordSpending(userEmail, price, `Bot "${bot.name}" deployment`, serverAttrs.id);
+    if (!isAdmin && price > 0) recordSpending(userEmail, price, `Bot "${bot.name}" deployment`, serverAttrs.id);
 
     const deployment = {
       id: crypto.randomUUID(),

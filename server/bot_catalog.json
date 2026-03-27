@@ -467,5 +467,44 @@
     "active": true,
     "imageUrl": "",
     "pairUrl": "https://pair.bwmxmd.co.ke/"
+  },
+  {
+    "id": "cab54e93-2acc-481f-a523-3c8ba67b9429",
+    "name": "TOOSII-XD",
+    "description": "Made by TOOSSI",
+    "repoUrl": "https://github.com/TOOSII102/TOOSII-XD-ULTRA",
+    "tag": "whatsapp",
+    "priceKES": 50,
+    "ramMB": 512,
+    "diskMB": 1024,
+    "mainFile": "index.js",
+    "appJsonUrl": "https://raw.githubusercontent.com/TOOSII102/TOOSII-XD-ULTRA/main/app.json",
+    "appJsonName": "TOOSII-XD ULTRA",
+    "appJsonDescription": "TOOSII-XD ULTRA WhatsApp Multi-Device Bot",
+    "appJsonEnv": {
+      "OWNER_NUMBER": {
+        "description": "Your WhatsApp number with country code. No + or leading 0. Example: 254748340864",
+        "required": true
+      },
+      "SESSION_ID": {
+        "description": "Your TOOSII~ session ID from the session generator. Leave blank to use terminal pairing on first run.",
+        "required": false,
+        "value": ""
+      },
+      "SESSION_URL": {
+        "description": "URL of your session generator (optional). Shown in the bot connection message.",
+        "required": false,
+        "value": "https://toosii-xd-session-generator-woyo.onrender.com/pair"
+      }
+    },
+    "appJsonKeywords": [
+      "whatsapp",
+      "bot",
+      "multi-device"
+    ],
+    "createdAt": "2026-03-27T12:19:11.383Z",
+    "active": true,
+    "imageUrl": "",
+    "pairUrl": "https://toosii-xd-session-generator-woyo.onrender.com/pair"
   }
 ]
