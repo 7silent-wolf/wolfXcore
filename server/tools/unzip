@@ -1,0 +1,3 @@
+#!/bin/sh
+# wolfXnode unzip shim — delegates to the Node.js CJS implementation
+exec node "$(dirname "$0")/unzip.cjs" "$@"

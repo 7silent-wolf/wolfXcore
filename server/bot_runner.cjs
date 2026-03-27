@@ -35,9 +35,19 @@ const SUPPRESS_RE = /MODULE_TYPELESS_PACKAGE_JSON|Reparsing as ES module because
 // interactive setup wizards spawned by the bot) share the same stdin/stdout.
 // Without a PTY, writing to bot.stdin only reaches the direct child, not its
 // sub-processes — which is why interactive menus don't respond to input.
+// Prepend our tools dir so bots can use `unzip` even on systems that lack it
+const WOLFXNODE_TOOLS = path.join(__dirname, 'tools');
+const patchedEnv = {
+  ...process.env,
+  NODE_NO_WARNINGS: '1',
+  TERM: 'xterm-256color',
+  FORCE_COLOR: '1',
+  PATH: `${WOLFXNODE_TOOLS}:${process.env.PATH || '/usr/local/bin:/usr/bin:/bin'}`,
+};
+
 const bot = spawn('script', ['-q', '-c', `${process.execPath} --no-warnings ${ENTRY}`, '/dev/null'], {
   cwd: BOT_DIR,
-  env: { ...process.env, NODE_NO_WARNINGS: '1', TERM: 'xterm-256color', FORCE_COLOR: '1' },
+  env: patchedEnv,
   stdio: ['pipe', 'pipe', 'pipe'],
 });
 

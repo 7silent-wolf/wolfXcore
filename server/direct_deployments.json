@@ -19,8 +19,8 @@
     "priceKES": 50,
     "status": "running",
     "deployedAt": "2026-03-26T19:26:12.225Z",
-    "updatedAt": "2026-03-27T16:25:53.044Z",
-    "runnerPid": 2113
+    "updatedAt": "2026-03-27T17:36:53.121Z",
+    "runnerPid": 1918
   },
   {
     "id": "59279e8d-bcd3-4112-a366-d66d9db5ba88",
@@ -38,8 +38,8 @@
     "priceKES": 50,
     "status": "running",
     "deployedAt": "2026-03-27T12:23:27.917Z",
-    "updatedAt": "2026-03-27T16:25:59.047Z",
-    "runnerPid": 2171
+    "updatedAt": "2026-03-27T17:36:59.100Z",
+    "runnerPid": 2109
   },
   {
     "id": "b87fb81e-c26d-4fd8-a67a-12571705d764",
@@ -57,7 +57,7 @@
     "priceKES": 0,
     "status": "running",
     "deployedAt": "2026-03-27T16:16:16.866Z",
-    "updatedAt": "2026-03-27T16:26:05.035Z",
-    "runnerPid": 2195
+    "updatedAt": "2026-03-27T17:37:05.108Z",
+    "runnerPid": 2177
   }
 ]

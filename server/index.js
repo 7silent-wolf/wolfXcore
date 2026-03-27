@@ -4312,9 +4312,12 @@ const BOT_DEPLOYMENT_PRICE = 0; // Free mode — no charge for deployments
 // DIRECT BOT RUNNER (wolfdeploy-style — no Pterodactyl)
 // ============================================================
 const DIRECT_DEPLOYMENTS_FILE = path.join(__dirname, 'direct_deployments.json');
-const BOTS_BASE_DIR = process.env.BOTS_BASE_DIR || path.join(tmpdir(), 'wolfxnode-bots');
-const BOT_LOG_DIR   = path.join(__dirname, 'bot_logs');
-const BOT_RUNNER    = path.join(__dirname, 'bot_runner.cjs');
+const BOTS_BASE_DIR    = process.env.BOTS_BASE_DIR || path.join(tmpdir(), 'wolfxnode-bots');
+const BOT_LOG_DIR      = path.join(__dirname, 'bot_logs');
+const BOT_RUNNER       = path.join(__dirname, 'bot_runner.cjs');
+const WOLFXNODE_TOOLS  = path.join(__dirname, 'tools');
+// Prepend our bundled tools (unzip shim, etc.) to PATH for every spawned process
+const BOT_PATCHED_PATH = `${WOLFXNODE_TOOLS}:${process.env.PATH || '/usr/local/bin:/usr/bin:/bin'}`;
 fs.mkdirSync(BOTS_BASE_DIR, { recursive: true });
 fs.mkdirSync(BOT_LOG_DIR,   { recursive: true });
 
@@ -4426,7 +4429,8 @@ function setDirectStatus(id, status) {
 
 async function spawnStep(deployId, cmd, args, opts) {
   return new Promise((resolve, reject) => {
-    const proc = spawn(cmd, args, { ...opts, stdio: ['ignore', 'pipe', 'pipe'] });
+    const env = { ...process.env, PATH: BOT_PATCHED_PATH, ...(opts.env || {}) };
+    const proc = spawn(cmd, args, { ...opts, env, stdio: ['ignore', 'pipe', 'pipe'] });
     proc.stdout?.on('data', d => d.toString().split('\n').forEach(l => l.trim() && addDirectLog(deployId, 'info', l.trim())));
     proc.stderr?.on('data', d => d.toString().split('\n').forEach(l => l.trim() && addDirectLog(deployId, 'warn', l.trim())));
     proc.on('close', code => code === 0 ? resolve() : reject(new Error(`${cmd} exited with code ${code}`)));
@@ -4478,6 +4482,7 @@ async function runDirectDeployment(deployId, repoUrl, mainFile, envVars) {
       PORT: String(_botPort),
       NODE_ENV: 'production',
       WOLFXNODE_LOG_FILE: getBotLogFile(deployId),
+      PATH: BOT_PATCHED_PATH,
     };
     addDirectLog(deployId, 'info', `Assigned bot port: ${_botPort}`);
     const runner = spawn(process.execPath, [BOT_RUNNER, entryFile, deployDir], {
@@ -4705,7 +4710,7 @@ app.post('/api/bots/direct/:id/exec', authenticateToken, (req, res) => {
   const child = spawn('sh', ['-c', cmd], {
     cwd: fs.existsSync(deployDir) ? deployDir : process.cwd(),
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env, FORCE_COLOR: '1' },
+    env: { ...process.env, FORCE_COLOR: '1', PATH: BOT_PATCHED_PATH },
   });
 
   let outBuf = '', errBuf = '';
