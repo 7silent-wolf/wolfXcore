@@ -12,6 +12,7 @@ import jwt from 'jsonwebtoken';
 import { convertToKES } from './config/countries.js';
 import { spawn } from 'child_process';
 import { tmpdir } from 'os';
+import nodemailer from 'nodemailer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -3635,10 +3636,63 @@ function saveSiteSettings(settings) {
   }
 }
 
+// ─── Email Utility ────────────────────────────────────────────────────────────
+async function sendReviewEmail({ toEmail, botName, status, reviewNote, siteName }) {
+  const settings = loadSiteSettings();
+  const { emailUser, emailPass } = settings;
+  if (!emailUser || !emailPass) {
+    console.warn('[Email] No email config set — skipping review notification');
+    return { sent: false, reason: 'No email configured' };
+  }
+  const fromName = siteName || settings.siteName || 'wolfXnode';
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: { user: emailUser, pass: emailPass },
+  });
+  const isApproved = status === 'approved';
+  const subject = isApproved
+    ? `🎉 Your bot "${botName}" has been approved — ${fromName}`
+    : `Your bot "${botName}" submission update — ${fromName}`;
+  const html = `
+    <div style="font-family:monospace;background:#0a0a0a;color:#e5e5e5;padding:32px;border-radius:12px;max-width:540px;margin:0 auto;border:1px solid ${isApproved ? '#22c55e33' : '#ef444433'}">
+      <div style="margin-bottom:24px">
+        <span style="color:${isApproved ? '#22c55e' : '#ef4444'};font-size:28px">${isApproved ? '✅' : '❌'}</span>
+        <h2 style="color:${isApproved ? '#22c55e' : '#ef4444'};margin:8px 0 4px">${isApproved ? 'Bot Approved!' : 'Submission Update'}</h2>
+        <p style="color:#9ca3af;font-size:13px;margin:0">From the ${fromName} team</p>
+      </div>
+      <p style="font-size:14px;color:#d1d5db;line-height:1.6">
+        Hi there,<br><br>
+        ${isApproved
+          ? `We're excited to let you know that your bot <strong style="color:#ffffff">${botName}</strong> has been <strong style="color:#22c55e">approved</strong> and is now live on the ${fromName} platform. Users can now discover and deploy your bot!`
+          : `Thank you for submitting <strong style="color:#ffffff">${botName}</strong> to ${fromName}. After review, your submission has been <strong style="color:#ef4444">rejected</strong>.`
+        }
+      </p>
+      ${reviewNote ? `
+      <div style="margin:20px 0;padding:16px;background:${isApproved ? '#22c55e11' : '#ef444411'};border-left:3px solid ${isApproved ? '#22c55e' : '#ef4444'};border-radius:4px">
+        <p style="font-size:12px;color:#9ca3af;margin:0 0 4px;text-transform:uppercase;letter-spacing:0.05em">Admin Note</p>
+        <p style="font-size:14px;color:#e5e5e5;margin:0">${reviewNote}</p>
+      </div>` : ''}
+      ${!isApproved ? `<p style="font-size:13px;color:#9ca3af">You're welcome to improve your bot and resubmit when ready.</p>` : ''}
+      <hr style="border:none;border-top:1px solid #1f2937;margin:24px 0">
+      <p style="font-size:11px;color:#6b7280;margin:0">${fromName} · Automated notification · Do not reply to this email</p>
+    </div>
+  `;
+  try {
+    await transporter.sendMail({ from: `"${fromName}" <${emailUser}>`, to: toEmail, subject, html });
+    console.log(`[Email] Review notification sent to ${toEmail} (${status})`);
+    return { sent: true };
+  } catch (err) {
+    console.error('[Email] Failed to send review notification:', err.message);
+    return { sent: false, reason: err.message };
+  }
+}
+
 app.get('/api/site-settings', (req, res) => {
   try {
     const settings = loadSiteSettings();
-    return res.json({ success: true, settings });
+    // Strip email credentials from public response
+    const { emailUser: _u, emailPass: _p, ...publicSettings } = settings;
+    return res.json({ success: true, settings: publicSettings });
   } catch (error) {
     return res.status(500).json({ success: false, message: 'Failed to load settings' });
   }
@@ -3681,6 +3735,43 @@ app.put('/api/admin/site-settings', adminLimiter, authenticateToken, requireAdmi
     console.error('Site settings update error:', error);
     return res.status(500).json({ success: false, message: 'Failed to update settings' });
   }
+});
+
+// Admin: get email config (password masked)
+app.get('/api/admin/email-config', adminLimiter, authenticateToken, requireAdmin, (req, res) => {
+  const s = loadSiteSettings();
+  return res.json({ success: true, emailUser: s.emailUser || '', emailPassSet: !!(s.emailPass) });
+});
+
+// Admin: save email config
+app.put('/api/admin/email-config', adminLimiter, authenticateToken, requireAdmin, [
+  body('emailUser').trim().isEmail().withMessage('Valid email required').isLength({ max: 100 }),
+  body('emailPass').isString().trim().notEmpty().withMessage('App password required').isLength({ max: 200 }),
+], handleValidationErrors, (req, res) => {
+  try {
+    const s = loadSiteSettings();
+    s.emailUser = req.body.emailUser.trim();
+    s.emailPass = req.body.emailPass.trim();
+    saveSiteSettings(s);
+    return res.json({ success: true, message: 'Email config saved' });
+  } catch (e) {
+    return res.status(500).json({ success: false, message: 'Failed to save email config' });
+  }
+});
+
+// Admin: test email config
+app.post('/api/admin/email-config/test', adminLimiter, authenticateToken, requireAdmin, async (req, res) => {
+  const s = loadSiteSettings();
+  if (!s.emailUser || !s.emailPass) return res.status(400).json({ success: false, message: 'No email config set' });
+  const result = await sendReviewEmail({
+    toEmail: s.emailUser,
+    botName: 'TestBot',
+    status: 'approved',
+    reviewNote: 'This is a test email from wolfXnode.',
+    siteName: s.siteName,
+  });
+  if (result.sent) return res.json({ success: true, message: `Test email sent to ${s.emailUser}` });
+  return res.status(500).json({ success: false, message: result.reason || 'Failed to send test email' });
 });
 
 // Superadmin key — loaded from superadmin_config.json (set up by setup_superadmin.cjs)
@@ -4852,6 +4943,15 @@ app.patch('/api/admin/bot-submissions/:id', adminLimiter, authenticateToken, req
     }
   }
   saveSubmissions(submissions);
+  // Send email notification (non-blocking)
+  const settings = loadSiteSettings();
+  sendReviewEmail({
+    toEmail: sub.gmail,
+    botName: sub.botName,
+    status: sub.status,
+    reviewNote: sub.reviewNote,
+    siteName: settings.siteName,
+  }).catch(e => console.error('[Email] Review notification error:', e.message));
   return res.json({ success: true, submission: sub });
 });
 

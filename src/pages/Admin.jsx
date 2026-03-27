@@ -49,6 +49,7 @@ import {
   Database,
   BarChart3,
   Layers,
+  Lock,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getCountryByCode, formatCurrency, convertFromKES } from '../lib/currencyConfig';
@@ -99,6 +100,11 @@ const Admin = () => {
   });
   const [settingsLoading, setSettingsLoading] = useState(false);
   const [settingsSaving, setSettingsSaving] = useState(false);
+  const [emailConfig, setEmailConfig] = useState({ emailUser: '', emailPass: '', emailPassSet: false });
+  const [emailConfigLoading, setEmailConfigLoading] = useState(false);
+  const [emailConfigSaving, setEmailConfigSaving] = useState(false);
+  const [emailConfigTesting, setEmailConfigTesting] = useState(false);
+  const [showEmailPass, setShowEmailPass] = useState(false);
   const [broadcastTitle, setBroadcastTitle] = useState('');
   const [broadcastMessage, setBroadcastMessage] = useState('');
   const [broadcastType, setBroadcastType] = useState('info');
@@ -386,6 +392,47 @@ const Admin = () => {
     }
   };
 
+  const fetchEmailConfig = async () => {
+    setEmailConfigLoading(true);
+    try {
+      const res = await adminFetch('/api/admin/email-config');
+      const data = await res.json();
+      if (data.success) setEmailConfig(prev => ({ ...prev, emailUser: data.emailUser, emailPassSet: data.emailPassSet, emailPass: '' }));
+    } catch { toast.error('Failed to load email config'); }
+    finally { setEmailConfigLoading(false); }
+  };
+
+  const saveEmailConfig = async () => {
+    if (!emailConfig.emailUser.trim()) { toast.error('Email address is required'); return; }
+    if (!emailConfig.emailPass.trim()) { toast.error('App password is required'); return; }
+    setEmailConfigSaving(true);
+    try {
+      const res = await adminFetch('/api/admin/email-config', {
+        method: 'PUT',
+        body: JSON.stringify({ emailUser: emailConfig.emailUser, emailPass: emailConfig.emailPass }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success('Email config saved');
+        setEmailConfig(prev => ({ ...prev, emailPass: '', emailPassSet: true }));
+      } else {
+        toast.error(data.message || 'Failed to save email config');
+      }
+    } catch { toast.error('Failed to save email config'); }
+    finally { setEmailConfigSaving(false); }
+  };
+
+  const testEmailConfig = async () => {
+    setEmailConfigTesting(true);
+    try {
+      const res = await adminFetch('/api/admin/email-config/test', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) toast.success(data.message || 'Test email sent!');
+      else toast.error(data.message || 'Test email failed');
+    } catch { toast.error('Test email failed'); }
+    finally { setEmailConfigTesting(false); }
+  };
+
   const handleBroadcast = async () => {
     if (!broadcastTitle.trim() || !broadcastMessage.trim()) {
       toast.error('Title and message are required');
@@ -585,6 +632,7 @@ const Admin = () => {
     }
     if (activeTab === 'site-settings' && !siteSettings.whatsappChannel) {
       fetchSiteSettings();
+      fetchEmailConfig();
     }
     if (activeTab === 'disk' && !diskStats && !diskLoading) {
       fetchDiskStats();
@@ -2248,6 +2296,95 @@ const Admin = () => {
                       </>
                     )}
                   </motion.button>
+                </div>
+              )}
+            </div>
+
+            {/* Email Notification Config */}
+            <div className="rounded-xl border border-primary/20 bg-black/30 backdrop-blur-sm p-4 sm:p-6">
+              <div className="flex items-center gap-2 mb-1">
+                <Mail size={18} className="text-primary" />
+                <h3 className="text-sm sm:text-lg font-bold">Email Notifications</h3>
+              </div>
+              <p className="text-xs text-gray-500 font-mono mb-4">
+                Configure a Gmail address to send bot submission review emails (approved/rejected) to developers.
+                Use a <span className="text-primary">Gmail App Password</span> — not your regular password.
+              </p>
+
+              {emailConfigLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <LoadingSpinner size="lg" />
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <label className="flex items-center gap-2 text-xs font-mono text-gray-400 mb-1.5">
+                      <Mail size={12} className="text-primary" />
+                      Sender Gmail Address
+                    </label>
+                    <input
+                      type="email"
+                      value={emailConfig.emailUser}
+                      onChange={(e) => setEmailConfig(prev => ({ ...prev, emailUser: e.target.value }))}
+                      placeholder="yourbot@gmail.com"
+                      className="w-full px-4 py-2.5 bg-black/50 border border-primary/10 rounded-lg text-sm font-mono text-white placeholder-gray-600 focus:outline-none focus:border-primary/30 transition-colors"
+                      data-testid="input-email-user"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center gap-2 text-xs font-mono text-gray-400 mb-1.5">
+                      <Lock size={12} className="text-primary" />
+                      Gmail App Password
+                      {emailConfig.emailPassSet && (
+                        <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20 font-mono">configured</span>
+                      )}
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showEmailPass ? 'text' : 'password'}
+                        value={emailConfig.emailPass}
+                        onChange={(e) => setEmailConfig(prev => ({ ...prev, emailPass: e.target.value }))}
+                        placeholder={emailConfig.emailPassSet ? '••••••••••••••••' : 'xxxx xxxx xxxx xxxx'}
+                        className="w-full px-4 py-2.5 pr-10 bg-black/50 border border-primary/10 rounded-lg text-sm font-mono text-white placeholder-gray-600 focus:outline-none focus:border-primary/30 transition-colors"
+                        data-testid="input-email-pass"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowEmailPass(p => !p)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                      >
+                        {showEmailPass ? <EyeOff size={14} /> : <Eye size={14} />}
+                      </button>
+                    </div>
+                    <p className="text-[10px] text-gray-600 font-mono mt-1">
+                      Google Account → Security → 2-Step Verification → App passwords → Generate
+                    </p>
+                  </div>
+
+                  <div className="flex gap-2 pt-1">
+                    <motion.button
+                      onClick={saveEmailConfig}
+                      disabled={emailConfigSaving}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary font-mono text-sm font-semibold transition-colors disabled:opacity-30"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      data-testid="button-save-email-config"
+                    >
+                      {emailConfigSaving ? <LoadingSpinner size="sm" /> : <><Save size={14} />Save Config</>}
+                    </motion.button>
+                    <motion.button
+                      onClick={testEmailConfig}
+                      disabled={emailConfigTesting || !emailConfig.emailPassSet}
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-black/50 hover:bg-primary/10 border border-primary/20 text-gray-400 hover:text-primary font-mono text-sm transition-colors disabled:opacity-30"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      data-testid="button-test-email"
+                      title="Send a test email to the configured address"
+                    >
+                      {emailConfigTesting ? <LoadingSpinner size="sm" /> : <><Send size={14} />Test</>}
+                    </motion.button>
+                  </div>
                 </div>
               )}
             </div>
