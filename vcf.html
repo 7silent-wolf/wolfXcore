@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>wolfXnode — Digital Card</title>
+  <meta name="description" content="wolfXnode digital contact card. Connect, deploy, explore." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        hsl(120, 100%, 2%);
+      --bg-card:   hsl(120, 100%, 4%);
+      --bg-card2:  hsl(120, 100%, 3%);
+      --primary:   hsl(120, 100%, 50%);
+      --primary-d: hsl(120, 100%, 40%);
+      --primary-dim: hsl(120, 50%, 40%);
+      --border:    hsl(120, 100%, 20%);
+      --border-d:  hsl(120, 50%, 12%);
+      --muted:     hsl(120, 30%, 10%);
+      --text:      hsl(120, 100%, 50%);
+      --text-dim:  hsl(120, 40%, 55%);
+      --text-muted:hsl(120, 20%, 30%);
+      --glow:      0 0 24px hsl(120 100% 50% / 0.35);
+      --glow-lg:   0 0 60px hsl(120 100% 50% / 0.2), 0 0 120px hsl(120 100% 50% / 0.1);
+      --radius:    12px;
+      --mono:      'JetBrains Mono', monospace;
+      --orb:       'Orbitron', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ─── Animated Grid Background ─────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(hsl(120 100% 50% / 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, hsl(120 100% 50% / 0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── Floating Orbs ─────────────────────────────────────────── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      animation: orbFloat 8s ease-in-out infinite;
+    }
+    .orb-1 { width: 400px; height: 400px; background: hsl(120 100% 50% / 0.06); top: -100px; right: -100px; animation-delay: 0s; }
+    .orb-2 { width: 300px; height: 300px; background: hsl(120 100% 50% / 0.04); bottom: 10%; left: -80px; animation-delay: -3s; }
+    .orb-3 { width: 200px; height: 200px; background: hsl(120 100% 50% / 0.05); top: 50%; left: 50%; animation-delay: -5s; }
+    @keyframes orbFloat {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50%       { transform: translateY(-30px) scale(1.05); }
+    }
+
+    /* ─── Page Wrapper ──────────────────────────────────────────── */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 60px;
+    }
+
+    /* ─── Top nav bar ───────────────────────────────────────────── */
+    .topbar {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: hsl(120 100% 3% / 0.8);
+      border: 1px solid var(--border-d);
+      border-radius: var(--radius);
+      backdrop-filter: blur(12px);
+      margin-bottom: 32px;
+    }
+    .topbar-logo {
+      font-family: var(--orb);
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      text-shadow: var(--glow);
+    }
+    .topbar-logo span { color: hsl(120 100% 80%); }
+    .topbar-tag {
+      font-size: 10px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      border: 1px solid var(--border-d);
+      padding: 3px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── Hero Card ─────────────────────────────────────────────── */
+    .card {
+      width: 100%;
+      max-width: 700px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--glow-lg), 0 40px 80px rgba(0,0,0,0.6);
+      animation: cardIn 0.7s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(40px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Card top accent strip */
+    .card-strip {
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), var(--primary-d), transparent);
+    }
+
+    /* Card header */
+    .card-header {
+      padding: 36px 36px 28px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      border-bottom: 1px solid var(--border-d);
+      position: relative;
+    }
+    .card-header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 36px; right: 36px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    /* Avatar */
+    .avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: var(--muted);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--orb);
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--primary);
+      text-shadow: var(--glow);
+      flex-shrink: 0;
+      position: relative;
+      box-shadow: var(--glow);
+    }
+    .avatar-ring {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 1px solid hsl(120 100% 50% / 0.2);
+      animation: ringPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes ringPulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50%       { opacity: 0.8; transform: scale(1.05); }
+    }
+
+    /* Name / title */
+    .card-identity { flex: 1; min-width: 0; }
+    .card-name {
+      font-family: var(--orb);
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 900;
+      color: var(--primary);
+      text-shadow: var(--glow);
+      letter-spacing: 0.04em;
+      line-height: 1.2;
+    }
+    .card-title {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 6px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .card-handle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-family: var(--mono);
+    }
+    .card-handle span { color: var(--primary-dim); }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 9px;
+      font-family: var(--mono);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--primary);
+      border: 1px solid hsl(120 100% 50% / 0.3);
+      background: hsl(120 100% 50% / 0.05);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-top: 10px;
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 6px var(--primary);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ─── Contact Links Grid ────────────────────────────────────── */
+    .links-grid {
+      padding: 28px 36px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-d);
+    }
+    .link-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--bg-card2);
+      border: 1px solid var(--border-d);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text-dim);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .link-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, hsl(120 100% 50% / 0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .link-item:hover {
+      border-color: var(--border);
+      color: var(--primary);
+      box-shadow: var(--glow);
+      transform: translateY(-1px);
+    }
+    .link-item:hover::before { opacity: 1; }
+
+    .link-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border-d);
+      background: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+    .link-item:hover .link-icon {
+      border-color: var(--border);
+      box-shadow: 0 0 12px hsl(120 100% 50% / 0.2);
+    }
+    .link-info { min-width: 0; flex: 1; }
+    .link-label { font-size: 9px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2px; }
+    .link-value { font-size: 11px; color: inherit; font-family: var(--mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Full-width link */
+    .link-item.full { grid-column: 1 / -1; }
+
+    /* ─── Stats row ─────────────────────────────────────────────── */
+    .stats-row {
+      padding: 20px 36px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      border-bottom: 1px solid var(--border-d);
+    }
+    .stat {
+      text-align: center;
+      padding: 16px 8px;
+      background: var(--bg-card2);
+      border: 1px solid var(--border-d);
+      border-radius: var(--radius);
+    }
+    .stat-value {
+      font-family: var(--orb);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      text-shadow: var(--glow);
+      line-height: 1;
+    }
+    .stat-label { font-size: 9px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 6px; }
+
+    /* ─── Action Buttons ────────────────────────────────────────── */
+    .actions {
+      padding: 28px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 24px;
+      border-radius: var(--radius);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: hsl(120, 100%, 2%);
+      box-shadow: var(--glow);
+    }
+    .btn-primary:hover {
+      background: hsl(120, 100%, 60%);
+      box-shadow: 0 0 40px hsl(120 100% 50% / 0.6);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: hsl(120 100% 50% / 0.07);
+      box-shadow: var(--glow);
+      transform: translateY(-2px);
+    }
+    .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ─── Footer strip ──────────────────────────────────────────── */
+    .card-footer {
+      padding: 16px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: hsl(120 100% 2% / 0.6);
+      border-top: 1px solid var(--border-d);
+    }
+    .footer-brand { font-size: 10px; color: var(--text-muted); font-family: var(--mono); }
+    .footer-brand span { color: var(--primary); }
+    .cursor {
+      display: inline-block;
+      width: 6px; height: 12px;
+      background: var(--primary);
+      margin-left: 3px;
+      vertical-align: middle;
+      animation: blink 1.2s step-end infinite;
+    }
+    .footer-id { font-size: 9px; color: var(--text-muted); letter-spacing: 0.1em; font-family: var(--mono); }
+
+    /* ─── Bottom tagline ────────────────────────────────────────── */
+    .tagline {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: var(--mono);
+    }
+    .tagline a { color: var(--primary-dim); text-decoration: none; transition: color 0.2s; }
+    .tagline a:hover { color: var(--primary); }
+
+    /* ─── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 520px) {
+      .card-header { flex-direction: column; align-items: flex-start; gap: 16px; padding: 24px 20px 20px; }
+      .links-grid { grid-template-columns: 1fr; padding: 20px; }
+      .link-item.full { grid-column: auto; }
+      .stats-row { padding: 16px 20px; }
+      .actions { padding: 20px; }
+      .btn-row { grid-template-columns: 1fr; }
+      .card-footer { flex-direction: column; gap: 6px; padding: 14px 20px; text-align: center; }
+      .topbar { padding: 12px 16px; }
+    }
+
+    /* ─── Scanline overlay ──────────────────────────────────────── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        hsl(120 100% 50% / 0.01) 2px,
+        hsl(120 100% 50% / 0.01) 4px
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="page">
+
+    <!-- Top nav -->
+    <nav class="topbar">
+      <div class="topbar-logo">wolf<span>X</span>node</div>
+      <div class="topbar-tag">DIGITAL CARD v1.0</div>
+    </nav>
+
+    <!-- Main card -->
+    <div class="card">
+      <div class="card-strip"></div>
+
+      <!-- Header -->
+      <div class="card-header">
+        <div class="avatar">
+          W
+          <div class="avatar-ring"></div>
+        </div>
+        <div class="card-identity">
+          <div class="card-name">Silentwolf</div>
+          <div class="card-title">Bot Developer &amp; System Explorer</div>
+          <div class="card-handle"><span>@</span>Silentwolf906</div>
+          <div class="status-badge">
+            <div class="status-dot"></div>
+            Available
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact links -->
+      <div class="links-grid">
+
+        <a class="link-item" href="https://wa.me/254713046497" target="_blank" rel="noopener">
+          <div class="link-icon">📱</div>
+          <div class="link-info">
+            <div class="link-label">WhatsApp</div>
+            <div class="link-value">+254 713 046 497</div>
+          </div>
+        </a>
+
+        <a class="link-item" href="https://www.youtube.com/@Silentwolf906" target="_blank" rel="noopener">
+          <div class="link-icon">▶</div>
+          <div class="link-info">
+            <div class="link-label">YouTube</div>
+            <div class="link-value">@Silentwolf906</div>
+          </div>
+        </a>
+
+        <a class="link-item" href="https://whatsapp.com/channel/0029Vb6dn9nEQIaqEMNclK3Y" target="_blank" rel="noopener">
+          <div class="link-icon">📡</div>
+          <div class="link-info">
+            <div class="link-label">WA Channel</div>
+            <div class="link-value">wolfXnode Updates</div>
+          </div>
+        </a>
+
+        <a class="link-item" href="https://chat.whatsapp.com/HjFc3pud3IA0R0WGr1V2Xu" target="_blank" rel="noopener">
+          <div class="link-icon">👥</div>
+          <div class="link-info">
+            <div class="link-label">WA Group</div>
+            <div class="link-value">wolfXnode Community</div>
+          </div>
+        </a>
+
+        <a class="link-item full" href="https://wolfxnode.replit.app" target="_blank" rel="noopener">
+          <div class="link-icon">⚡</div>
+          <div class="link-info">
+            <div class="link-label">Platform</div>
+            <div class="link-value">wolfXnode — WhatsApp Bot Hosting</div>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-value">24/7</div>
+          <div class="stat-label">Uptime</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">∞</div>
+          <div class="stat-label">Bots Hosted</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">KE</div>
+          <div class="stat-label">Based In</div>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="actions">
+        <button class="btn btn-primary" onclick="downloadVCF()">
+          ⬇ Download Contact (.vcf)
+        </button>
+        <div class="btn-row">
+          <a class="btn btn-secondary" href="https://wa.me/254713046497" target="_blank" rel="noopener">
+            💬 Message Me
+          </a>
+          <a class="btn btn-secondary" href="https://wolfxnode.replit.app" target="_blank" rel="noopener">
+            🚀 Visit Platform
+          </a>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="card-footer">
+        <div class="footer-brand">
+          powered by <span>wolfXnode</span><span class="cursor"></span>
+        </div>
+        <div class="footer-id">ID: WOLF-906-VCF</div>
+      </div>
+    </div>
+
+    <!-- Bottom tagline -->
+    <p class="tagline">
+      I am just an explorer &nbsp;·&nbsp;
+      <a href="https://wolfxnode.replit.app">wolfxnode.replit.app</a>
+    </p>
+
+  </div>
+
+  <script>
+    function downloadVCF() {
+      const vcf = [
+        'BEGIN:VCARD',
+        'VERSION:3.0',
+        'FN:Silentwolf',
+        'N:Silentwolf;;;',
+        'NICKNAME:Wolf906',
+        'ORG:wolfXnode',
+        'TITLE:Bot Developer & System Explorer',
+        'TEL;TYPE=CELL,VOICE:+254713046497',
+        'URL:https://wolfxnode.replit.app',
+        'X-SOCIALPROFILE;TYPE=youtube:https://www.youtube.com/@Silentwolf906',
+        'X-SOCIALPROFILE;TYPE=whatsapp:https://wa.me/254713046497',
+        'NOTE:wolfXnode — WhatsApp Bot Hosting Platform. I am just an explorer.',
+        'END:VCARD'
+      ].join('\r\n');
+
+      const blob = new Blob([vcf], { type: 'text/vcard;charset=utf-8' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = 'silentwolf-wolfxnode.vcf';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+
+</body>
+</html>
