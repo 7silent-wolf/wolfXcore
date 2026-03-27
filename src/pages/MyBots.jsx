@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Bot, ExternalLink, Trash2, RefreshCw, Terminal, Zap, Clock, AlertCircle, Plus, Server, Square, RotateCcw } from 'lucide-react';
+import { Bot, ExternalLink, Trash2, RefreshCw, Terminal, Zap, Clock, AlertCircle, Plus, Server, Square, RotateCcw, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -28,6 +28,7 @@ export default function MyBots() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(null);
   const [actionBusy, setActionBusy] = useState(null);
+  const [confirmDel, setConfirmDel] = useState(null);
 
   useEffect(() => {
     fetchAll();
@@ -56,7 +57,6 @@ export default function MyBots() {
   };
 
   const handlePanelDelete = async (dep) => {
-    if (!window.confirm(`Delete "${dep.serverName}" bot? This will stop and remove the server.`)) return;
     setDeleting(dep.id);
     try {
       const res = await fetch(`/api/bots/my-deployments/${dep.id}`, { method: 'DELETE', headers: getAuthHeaders() });
@@ -95,6 +95,14 @@ export default function MyBots() {
       }
     } catch { toast.error('Action failed'); }
     finally { setActionBusy(null); }
+  };
+
+  const handleConfirmDelete = () => {
+    if (!confirmDel) return;
+    const { dep, type } = confirmDel;
+    setConfirmDel(null);
+    if (type === 'panel') handlePanelDelete(dep);
+    else handleDirectAction(dep, 'delete');
   };
 
   const formatDate = (iso) => {
@@ -249,7 +257,7 @@ export default function MyBots() {
                       )}
                       <button
                         data-testid={`button-delete-bot-${dep.id}`}
-                        onClick={() => handlePanelDelete(dep)}
+                        onClick={() => setConfirmDel({ dep, type: 'panel' })}
                         disabled={deleting === dep.id}
                         className="p-2 rounded-lg border border-red-500/20 text-red-400/60 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all disabled:opacity-40"
                         title="Remove bot"
@@ -355,7 +363,7 @@ export default function MyBots() {
                       )}
                       <button
                         data-testid={`button-delete-direct-${dep.id}`}
-                        onClick={() => { if (window.confirm(`Delete "${dep.serverName}"? This cannot be undone.`)) handleDirectAction(dep, 'delete'); }}
+                        onClick={() => setConfirmDel({ dep, type: 'direct' })}
                         disabled={actionBusy === `${dep.id}-delete`}
                         className="p-2 rounded-lg border border-red-500/20 text-red-400/60 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all disabled:opacity-40"
                         title="Delete bot"
@@ -375,6 +383,44 @@ export default function MyBots() {
             </p>
           </div>
         </>
+      )}
+
+      {confirmDel && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setConfirmDel(null)}>
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          <div
+            className="relative w-full max-w-sm rounded-xl border border-red-500/30 bg-[#0a0a0a] shadow-2xl p-6 space-y-4"
+            style={{ boxShadow: '0 0 40px rgba(239,68,68,0.15)' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
+                <Trash2 className="w-4 h-4 text-red-400" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white font-mono">Delete Bot</h3>
+                <p className="text-[11px] text-gray-500 font-mono mt-0.5">This action cannot be undone</p>
+              </div>
+            </div>
+            <p className="text-xs font-mono text-gray-400 leading-relaxed">
+              Permanently delete <span className="text-white font-semibold">"{confirmDel.dep.serverName}"</span>? The bot process will be stopped and all data removed.
+            </p>
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => setConfirmDel(null)}
+                className="flex-1 py-2 rounded-lg border border-gray-700/50 text-gray-400 text-xs font-mono hover:bg-gray-800/50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                className="flex-1 py-2 rounded-lg border border-red-500/40 bg-red-500/10 text-red-400 text-xs font-mono font-semibold hover:bg-red-500/20 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

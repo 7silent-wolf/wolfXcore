@@ -1,6 +1,14 @@
 {
   "1": [
     {
+      "id": "1774553172225-dob25w",
+      "type": "server",
+      "title": "Bot Deploying",
+      "message": "Your \"BWM-XMD\" bot is starting up!",
+      "read": false,
+      "createdAt": "2026-03-26T19:26:12.225Z"
+    },
+    {
       "id": "1774546948593-lv6ick",
       "type": "server",
       "title": "Bot Deploying",

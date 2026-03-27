@@ -288,8 +288,11 @@ export default function DirectBotLog() {
     setTimeout(() => loadInitial(limit).then(startPolling), 1500);
   });
 
-  const handleDelete = () => {
-    if (!window.confirm(`Delete "${serverName || botName}" permanently?`)) return;
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleDelete = () => setShowDeleteModal(true);
+  const confirmDeleteAction = () => {
+    setShowDeleteModal(false);
     doAction('', 'DELETE', 'Deployment deleted', () => navigate('/my-bots'));
   };
 
@@ -570,6 +573,44 @@ export default function DirectBotLog() {
         ⚠ Direct deployments run as a process on the wolfXnode server. They will stop if the server restarts. Use{' '}
         <span className="text-yellow-300 font-bold">Restart</span> to bring the bot back up.
       </div>
+
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setShowDeleteModal(false)}>
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          <div
+            className="relative w-full max-w-sm rounded-xl border border-red-500/30 bg-[#0a0a0a] shadow-2xl p-6 space-y-4"
+            style={{ boxShadow: '0 0 40px rgba(239,68,68,0.15)' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
+                <Trash2 className="w-4 h-4 text-red-400" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white font-mono">Delete Bot</h3>
+                <p className="text-[11px] text-gray-500 font-mono mt-0.5">This action cannot be undone</p>
+              </div>
+            </div>
+            <p className="text-xs font-mono text-gray-400 leading-relaxed">
+              Permanently delete <span className="text-white font-semibold">"{serverName || botName}"</span>? The process will be killed and all logs removed.
+            </p>
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="flex-1 py-2 rounded-lg border border-gray-700/50 text-gray-400 text-xs font-mono hover:bg-gray-800/50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDeleteAction}
+                className="flex-1 py-2 rounded-lg border border-red-500/40 bg-red-500/10 text-red-400 text-xs font-mono font-semibold hover:bg-red-500/20 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
