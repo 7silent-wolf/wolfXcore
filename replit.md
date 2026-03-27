@@ -73,6 +73,15 @@ Bots run as **detached Node.js processes** on the wolfXnode server (no Pterodact
 - Bot port formula: `10000 + (parseInt(deployId.replace(/-/g,'').slice(0,6), 16) % 50000)` (deterministic)
 - `BOT_PATCHED_PATH` — `server/tools/` prepended to `PATH` for all spawned processes
 
+### Auto-restart after self-exit (e.g. zip update)
+When a bot calls `process.exit()` to restart itself (e.g. after a zip self-update), wolfXnode detects the exit and brings it back automatically:
+
+1. **Close event listener** — wired on the runner ChildProcess _before_ `unref()`. Fires immediately when the runner exits. Schedules `runDirectDeployment` after a 3-second delay.
+2. **Heartbeat watchdog** — `setInterval` every 12 seconds checks all `status=running` deployments. If a PID is dead and the user didn't manually stop it, restarts automatically.
+3. **`_intentionallyStopped` Set** — populated by the Stop button endpoint. Auto-restart skips any ID in this set so manual stops are respected.
+4. **`_pendingAutoRestart` Set** — prevents duplicate restart queues if both mechanisms fire at once.
+5. Restart endpoint clears `_intentionallyStopped` so the next manual Restart works correctly.
+
 ### API routes
 | Method | Route | Description |
 |---|---|---|
