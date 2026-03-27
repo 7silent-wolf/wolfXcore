@@ -125,6 +125,12 @@ const Admin = () => {
   const [grantBalanceAmount, setGrantBalanceAmount] = useState('');
   const [grantBalanceNote, setGrantBalanceNote] = useState('');
   const [grantBalanceLoading, setGrantBalanceLoading] = useState(false);
+  const [submissions, setSubmissions] = useState([]);
+  const [submissionsLoading, setSubmissionsLoading] = useState(false);
+  const [subFilter, setSubFilter] = useState('pending');
+  const [reviewingId, setReviewingId] = useState(null);
+  const [reviewNote, setReviewNote] = useState('');
+  const [reviewActionLoading, setReviewActionLoading] = useState(null);
 
   const handleGrantBalance = async () => {
     if (!grantBalanceTarget || !grantBalanceAmount || Number(grantBalanceAmount) < 1) return;
@@ -211,6 +217,37 @@ const Admin = () => {
       else toast.error('Failed to load bot catalog');
     } catch { toast.error('Failed to load bot catalog'); }
     finally { setBotCatalogLoading(false); }
+  };
+
+  const fetchSubmissions = async (status = subFilter) => {
+    setSubmissionsLoading(true);
+    try {
+      const res = await adminFetch(`/api/admin/bot-submissions?status=${status}`);
+      const data = await res.json();
+      if (data.success) setSubmissions(data.submissions || []);
+      else toast.error('Failed to load submissions');
+    } catch { toast.error('Failed to load submissions'); }
+    finally { setSubmissionsLoading(false); }
+  };
+
+  const handleReviewSubmission = async (id, action) => {
+    setReviewActionLoading(id + action);
+    try {
+      const res = await adminFetch(`/api/admin/bot-submissions/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ action, reviewNote }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(action === 'approve' ? 'Bot approved and added to catalog!' : 'Submission rejected');
+        setReviewingId(null);
+        setReviewNote('');
+        fetchSubmissions();
+      } else {
+        toast.error(data.message || 'Review failed');
+      }
+    } catch { toast.error('Review failed'); }
+    finally { setReviewActionLoading(null); }
   };
 
   const fetchDiskStats = async () => {
@@ -728,6 +765,7 @@ const Admin = () => {
     { id: 'notifications', label: 'Notify', icon: Bell },
     { id: 'tutorials', label: 'Tutorials', icon: Video },
     { id: 'bots', label: 'Bot Catalog', icon: Bot },
+    { id: 'submissions', label: 'Submissions', icon: Upload, badge: submissions.filter(s => s.status === 'pending').length || null },
     { id: 'disk', label: 'Disk', icon: HardDrive },
     { id: 'site-settings', label: 'Site', icon: Settings },
   ];
@@ -759,7 +797,7 @@ const Admin = () => {
         {tabs.map(tab => (
           <button
             key={tab.id}
-            onClick={() => { setActiveTab(tab.id); setSearchQuery(''); if (tab.id === 'tutorials' && tutorials.length === 0) fetchTutorials(); if (tab.id === 'alerts' && adminAlerts.length === 0) fetchAlerts(); if (tab.id === 'bots' && botCatalog.length === 0) fetchBotCatalog(); }}
+            onClick={() => { setActiveTab(tab.id); setSearchQuery(''); if (tab.id === 'tutorials' && tutorials.length === 0) fetchTutorials(); if (tab.id === 'alerts' && adminAlerts.length === 0) fetchAlerts(); if (tab.id === 'bots' && botCatalog.length === 0) fetchBotCatalog(); if (tab.id === 'submissions') fetchSubmissions(); }}
             className={`relative flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-md sm:rounded-lg font-mono text-[10px] sm:text-sm transition-all flex-1 min-w-0 ${
               activeTab === tab.id
                 ? 'bg-primary/20 text-white border border-primary/30'
@@ -1792,6 +1830,130 @@ const Admin = () => {
                 </div>
               )}
             </div>
+          </motion.div>
+        )}
+
+        {activeTab === 'submissions' && (
+          <motion.div key="submissions" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <Upload className="w-5 h-5 text-primary" />
+                <h2 className="text-base font-bold">Bot Submissions</h2>
+              </div>
+              <div className="flex items-center gap-2">
+                {['pending','approved','rejected'].map(f => (
+                  <button
+                    key={f}
+                    onClick={() => { setSubFilter(f); fetchSubmissions(f); }}
+                    className={`px-3 py-1 text-xs font-mono rounded-lg border transition-all capitalize ${
+                      subFilter === f
+                        ? f === 'pending' ? 'bg-yellow-500/20 border-yellow-500/40 text-yellow-400'
+                          : f === 'approved' ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400'
+                          : 'bg-red-500/20 border-red-500/40 text-red-400'
+                        : 'bg-transparent border-gray-700/50 text-gray-500 hover:text-white'
+                    }`}
+                  >{f}</button>
+                ))}
+                <button onClick={() => fetchSubmissions()} className="px-3 py-1 text-xs font-mono bg-primary/10 border border-primary/30 rounded-lg hover:bg-primary/20 transition-all">Refresh</button>
+              </div>
+            </div>
+
+            {submissionsLoading ? (
+              <div className="flex justify-center py-12"><LoadingSpinner /></div>
+            ) : submissions.length === 0 ? (
+              <div className="rounded-xl border border-gray-800/50 bg-black/20 py-14 text-center">
+                <p className="text-sm font-mono text-gray-600">No {subFilter} submissions</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {submissions.map(sub => (
+                  <div key={sub.id} className="rounded-xl border border-primary/10 bg-black/30 overflow-hidden">
+                    <div className="flex items-center gap-3 p-4">
+                      {sub.imageUrl ? (
+                        <img src={sub.imageUrl} alt={sub.botName} className="w-12 h-12 rounded-lg object-cover shrink-0 border border-gray-700/50" onError={e => e.target.style.display='none'} />
+                      ) : (
+                        <div className="w-12 h-12 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0">
+                          <Bot className="w-6 h-6 text-gray-600" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="text-sm font-mono font-bold text-white">{sub.botName}</p>
+                          <span className="text-[10px] font-mono text-gray-600">v{sub.version}</span>
+                          <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border capitalize ${
+                            sub.status === 'pending' ? 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10'
+                            : sub.status === 'approved' ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10'
+                            : 'text-red-400 border-red-500/30 bg-red-500/10'
+                          }`}>{sub.status}</span>
+                        </div>
+                        <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+                          <span className="text-[10px] font-mono text-gray-500">{sub.username} · {sub.gmail}</span>
+                          <span className="text-[10px] font-mono text-gray-700">{new Date(sub.submittedAt).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                      {sub.status === 'pending' && (
+                        <button
+                          onClick={() => setReviewingId(reviewingId === sub.id ? null : sub.id)}
+                          className="px-3 py-1.5 text-xs font-mono bg-primary/10 border border-primary/30 rounded-lg hover:bg-primary/20 transition-all text-primary shrink-0"
+                        >
+                          {reviewingId === sub.id ? 'Close' : 'Review'}
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Details */}
+                    <div className="px-4 pb-3 pt-0 border-t border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 text-[11px] font-mono">
+                      <div className="flex gap-2 pt-2"><span className="text-gray-600 w-16 shrink-0">Repo</span><a href={sub.repoUrl} target="_blank" rel="noreferrer" className="text-primary/70 hover:text-primary truncate">{sub.repoUrl}</a></div>
+                      <div className="flex gap-2 pt-2"><span className="text-gray-600 w-16 shrink-0">Pair Site</span><a href={sub.pairSite} target="_blank" rel="noreferrer" className="text-primary/70 hover:text-primary truncate">{sub.pairSite}</a></div>
+                      {sub.description && <div className="flex gap-2 col-span-2"><span className="text-gray-600 w-16 shrink-0">About</span><span className="text-gray-400 leading-relaxed">{sub.description}</span></div>}
+                      {sub.reviewNote && <div className="flex gap-2 col-span-2"><span className="text-gray-600 w-16 shrink-0">Note</span><span className={sub.status === 'rejected' ? 'text-red-400' : 'text-emerald-400'}>{sub.reviewNote}</span></div>}
+                    </div>
+
+                    {/* Review Panel */}
+                    <AnimatePresence>
+                      {reviewingId === sub.id && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-4 pb-4 border-t border-primary/10 pt-3 space-y-3">
+                            <textarea
+                              value={reviewNote}
+                              onChange={e => setReviewNote(e.target.value)}
+                              placeholder="Optional note to developer (reason for rejection, feedback, etc.)"
+                              rows={2}
+                              className="w-full bg-black/60 border border-gray-700/50 rounded-lg px-3 py-2 text-xs font-mono text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 resize-none"
+                            />
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleReviewSubmission(sub.id, 'approve')}
+                                disabled={!!reviewActionLoading}
+                                data-testid={`button-approve-${sub.id}`}
+                                className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 text-xs font-mono font-semibold hover:bg-emerald-500/20 transition-all disabled:opacity-50"
+                              >
+                                {reviewActionLoading === sub.id + 'approve' ? <LoadingSpinner size="sm" /> : <CheckCircle className="w-3.5 h-3.5" />}
+                                Approve & Add to Catalog
+                              </button>
+                              <button
+                                onClick={() => handleReviewSubmission(sub.id, 'reject')}
+                                disabled={!!reviewActionLoading}
+                                data-testid={`button-reject-${sub.id}`}
+                                className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-red-500/40 bg-red-500/10 text-red-400 text-xs font-mono font-semibold hover:bg-red-500/20 transition-all disabled:opacity-50"
+                              >
+                                {reviewActionLoading === sub.id + 'reject' ? <LoadingSpinner size="sm" /> : <X className="w-3.5 h-3.5" />}
+                                Reject
+                              </button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
 

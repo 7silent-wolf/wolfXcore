@@ -16,6 +16,7 @@ import {
   Bot,
   Terminal,
   Sparkles,
+  Upload,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -23,6 +24,7 @@ const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/overview' },
   { icon: Bot, label: 'Available Bots', path: '/available-bots' },
   { icon: Terminal, label: 'My Bots', path: '/my-bots' },
+  { icon: Upload, label: 'Submit Bot', path: '/submit-bot' },
   { icon: Users, label: 'Referrals', path: '/referrals' },
   { icon: Receipt, label: 'Billing', path: '/billing' },
   { icon: Wallet, label: 'Wallet', path: '/wallet' },

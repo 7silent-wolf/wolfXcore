@@ -22,6 +22,7 @@ import AvailableBots from "./pages/AvailableBots";
 import MyBots from "./pages/MyBots";
 import BotDeployLog from "./pages/BotDeployLog";
 import DirectBotLog from "./pages/DirectBotLog";
+import SubmitBot from "./pages/SubmitBot";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ const App = () => (
                 <Route path="/my-bots" element={<MyBots />} />
                 <Route path="/bots/deploying/:serverId" element={<BotDeployLog />} />
                 <Route path="/bots/direct/:id/logs" element={<DirectBotLog />} />
+                <Route path="/submit-bot" element={<SubmitBot />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/superadmin" element={<SuperAdmin />} />
               </Route>

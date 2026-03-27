@@ -4762,6 +4762,109 @@ app.delete('/api/admin/bot-catalog/:id', adminLimiter, authenticateToken, requir
   }
 });
 
+// ─── Bot Submission System ───────────────────────────────────────────────────
+const BOT_SUBMISSIONS_FILE = path.join(__dirname, 'bot_submissions.json');
+const loadSubmissions = () => { try { return JSON.parse(fs.readFileSync(BOT_SUBMISSIONS_FILE, 'utf8')); } catch { return []; } };
+const saveSubmissions = (d) => { try { fs.writeFileSync(BOT_SUBMISSIONS_FILE, JSON.stringify(d, null, 2), 'utf8'); } catch (e) { console.error('Error saving submissions:', e); } };
+
+// Public (authenticated): submit a bot for review
+app.post('/api/bots/submit', authenticateToken, [
+  body('botName').trim().notEmpty().withMessage('Bot name required').isLength({ max: 60 }),
+  body('gmail').trim().isEmail().withMessage('Valid Gmail required').isLength({ max: 100 }),
+  body('repoUrl').trim().notEmpty().withMessage('Repo URL required').isURL().isLength({ max: 300 }),
+  body('version').trim().notEmpty().withMessage('Version required').isLength({ max: 30 }),
+  body('pairSite').trim().notEmpty().withMessage('Pair site required').isURL().isLength({ max: 300 }),
+  body('imageUrl').trim().notEmpty().withMessage('Image URL required').isURL().isLength({ max: 500 }),
+  body('description').trim().optional().isLength({ max: 500 }),
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ success: false, message: errors.array()[0].msg });
+  const { botName, gmail, repoUrl, version, pairSite, imageUrl, description } = req.body;
+  const submissions = loadSubmissions();
+  const pending = submissions.find(s => s.status === 'pending' && s.userId === req.user.userId);
+  if (pending) return res.status(429).json({ success: false, message: 'You already have a pending submission. Wait for it to be reviewed.' });
+  const sub = {
+    id: crypto.randomUUID(),
+    userId: req.user.userId,
+    username: req.user.username,
+    gmail, botName, repoUrl, version, pairSite, imageUrl,
+    description: description || '',
+    status: 'pending',
+    submittedAt: new Date().toISOString(),
+    reviewedAt: null,
+    reviewNote: '',
+  };
+  submissions.push(sub);
+  saveSubmissions(submissions);
+  return res.json({ success: true, message: 'Submission received! Admin will review it shortly.', id: sub.id });
+});
+
+// Public (authenticated): get my submissions
+app.get('/api/bots/my-submissions', authenticateToken, (req, res) => {
+  const subs = loadSubmissions().filter(s => s.userId === req.user.userId);
+  return res.json({ success: true, submissions: subs });
+});
+
+// Admin: list all submissions
+app.get('/api/admin/bot-submissions', adminLimiter, authenticateToken, requireAdmin, (req, res) => {
+  const { status } = req.query;
+  let subs = loadSubmissions();
+  if (status) subs = subs.filter(s => s.status === status);
+  subs.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+  return res.json({ success: true, submissions: subs });
+});
+
+// Admin: approve or reject a submission
+app.patch('/api/admin/bot-submissions/:id', adminLimiter, authenticateToken, requireAdmin, (req, res) => {
+  const { action, reviewNote } = req.body; // action: 'approve' | 'reject'
+  if (!['approve', 'reject'].includes(action)) return res.status(400).json({ success: false, message: 'Invalid action' });
+  const submissions = loadSubmissions();
+  const sub = submissions.find(s => s.id === req.params.id);
+  if (!sub) return res.status(404).json({ success: false, message: 'Submission not found' });
+  sub.status = action === 'approve' ? 'approved' : 'rejected';
+  sub.reviewedAt = new Date().toISOString();
+  sub.reviewNote = reviewNote || '';
+  if (action === 'approve') {
+    const catalog = loadBotCatalog();
+    const existing = catalog.find(b => b.repoUrl === sub.repoUrl);
+    if (!existing) {
+      catalog.push({
+        id: crypto.randomUUID(),
+        name: sub.botName,
+        description: sub.description || sub.botName,
+        repoUrl: sub.repoUrl,
+        tag: 'community',
+        priceKES: 0,
+        ramMB: 512,
+        diskMB: 1024,
+        mainFile: 'index.js',
+        imageUrl: sub.imageUrl,
+        pairSite: sub.pairSite,
+        version: sub.version,
+        submittedBy: sub.username,
+        active: true,
+        appJsonUrl: `${sub.repoUrl.replace('https://github.com/', 'https://raw.githubusercontent.com/')}/main/app.json`,
+        appJsonName: sub.botName,
+        appJsonDescription: sub.description || sub.botName,
+        appJsonEnv: {},
+      });
+      saveBotCatalog(catalog);
+    }
+  }
+  saveSubmissions(submissions);
+  return res.json({ success: true, submission: sub });
+});
+
+// Admin: delete a submission
+app.delete('/api/admin/bot-submissions/:id', adminLimiter, authenticateToken, requireAdmin, (req, res) => {
+  const submissions = loadSubmissions();
+  const idx = submissions.findIndex(s => s.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ success: false, message: 'Not found' });
+  submissions.splice(idx, 1);
+  saveSubmissions(submissions);
+  return res.json({ success: true });
+});
+
 // Public: list active bots (authenticated users)
 app.get('/api/bots/catalog', authenticateToken, (req, res) => {
   const bots = loadBotCatalog().filter(b => b.active !== false);
